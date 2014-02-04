@@ -27,18 +27,14 @@
 
 static IMP sOriginalImp = NULL;
 
-
 @implementation Monsoon
-
 
 + (void)load{
     Class originalClass = NSClassFromString(@"SBAppSliderController");  //%hook SBAppSliderController
     Method originalMeth = class_getInstanceMethod(originalClass, @selector(switcherWasPresented:));
     sOriginalImp = method_getImplementation(originalMeth);
-    
 	Method replacementMeth = class_getInstanceMethod(NSClassFromString(@"Monsoon"), @selector(patchedLaunch:));
 	method_exchangeImplementations(originalMeth, replacementMeth);
-    
 }
 
 - (void)patchedLaunch:(_Bool)arg1{
