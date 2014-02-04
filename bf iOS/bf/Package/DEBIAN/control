@@ -1,0 +1,17 @@
+Package: com.ra1ndrops.bf
+Name: bf
+Version: 1.0-1
+Description: 
+Section: System
+Depends: firmware (>= 7.0)
+Conflicts: 
+Replaces: 
+Priority: optional
+Architecture: iphoneos-arm
+Author: BlueCocoa
+dev: 
+Homepage: 
+Depiction: 
+Maintainer: 
+Icon: 
+
