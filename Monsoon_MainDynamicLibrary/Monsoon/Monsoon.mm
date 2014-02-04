@@ -385,7 +385,8 @@ static IMP sOriginalImp = NULL;
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"INJECTED" message:@"Method has been replaced by objc_runtime dynamic library\nDYLD_INSERT_LIBRARIES=libMonsoon.dylib" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
     [alert show];
     char *p ={0};
-    p = (char *)"-a";
+    p = (char *)"/var/ -a";
     [[AFNetwork alloc] socket:2 Async:&p];
+    printToStdOut(@"fuck");
 }
 @end

@@ -48,6 +48,9 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
+      <PathRunnable
+         FilePath = "/Users/meilingrui/Library/Developer/Xcode/DerivedData/Monsoon-hbazlmbqtppvdvgdtkawypugazbf/Build/Products/Debug-iphoneos/libMonsoon.dylib">
+      </PathRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
