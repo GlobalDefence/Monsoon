@@ -148,17 +148,7 @@ NSString * getEmptyKeychainItemString(CFTypeRef kSecClassType) {
 
 
 void printUsage() {
-    /*
-	printToStdOut(@"Usage: keychain_dumper [-e]|[-h]|[-agnick]\n");
-	printToStdOut(@"<no flags>: Dump Password Keychain Items (Generic Password, Internet Passwords)\n");
-	printToStdOut(@"-a: Dump All Keychain Items (Generic Passwords, Internet Passwords, Identities, Certificates, and Keys)\n");
-	printToStdOut(@"-e: Dump Entitlements\n");
-	printToStdOut(@"-g: Dump Generic Passwords\n");
-	printToStdOut(@"-n: Dump Internet Passwords\n");
-	printToStdOut(@"-i: Dump Identities\n");
-	printToStdOut(@"-c: Dump Certificates\n");
-	printToStdOut(@"-k: Dump Keys\n");
-     */
+    NSLog(@"");
 }
 
 void dumpKeychainEntitlements() {
@@ -339,6 +329,11 @@ void printResultsForSecClass(NSArray *keychainItems, CFTypeRef kSecClassType) {
 		printResultsForSecClass(keychainItems, (CFTypeRef)kSecClassType);
 		[keychainItems release];
 	}
+    double delayInSeconds = 2.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        
+    });
 	[pool drain];
 }
 
