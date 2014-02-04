@@ -1,0 +1,328 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AF46E165189EAA180074EA71 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF46E164189EAA180074EA71 /* Foundation.framework */; };
+		AF46E167189EAA180074EA71 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF46E166189EAA180074EA71 /* UIKit.framework */; };
+		AF46E172189EAA180074EA71 /* Monsoon.m in Sources */ = {isa = PBXBuildFile; fileRef = AF46E171189EAA180074EA71 /* Monsoon.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AF46E161189EAA180074EA71 /* libMonsoon.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libMonsoon.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		AF46E164189EAA180074EA71 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		AF46E166189EAA180074EA71 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		AF46E16B189EAA180074EA71 /* control.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = control.txt; path = Package/DEBIAN/control.txt; sourceTree = "<group>"; };
+		AF46E16C189EAA180074EA71 /* control */ = {isa = PBXFileReference; lastKnownFileType = text; name = control; path = Package/DEBIAN/control; sourceTree = "<group>"; };
+		AF46E16E189EAA180074EA71 /* PackageVersion.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PackageVersion.plist; sourceTree = "<group>"; };
+		AF46E16F189EAA180074EA71 /* Monsoon-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Monsoon-Prefix.pch"; sourceTree = "<group>"; };
+		AF46E170189EAA180074EA71 /* Monsoon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Monsoon.h; sourceTree = "<group>"; };
+		AF46E171189EAA180074EA71 /* Monsoon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Monsoon.m; sourceTree = "<group>"; };
+		AF46E175189EAA180074EA71 /* 0xdeadfa11 */ = {isa = PBXFileReference; lastKnownFileType = text; name = 0xdeadfa11; path = Package/usr/lib/0xdeadfa11; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AF46E15D189EAA180074EA71 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AF46E165189EAA180074EA71 /* Foundation.framework in Frameworks */,
+				AF46E167189EAA180074EA71 /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AF46E157189EAA180074EA71 = {
+			isa = PBXGroup;
+			children = (
+				AF46E168189EAA180074EA71 /* Monsoon */,
+				AF46E163189EAA180074EA71 /* Frameworks */,
+				AF46E162189EAA180074EA71 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AF46E162189EAA180074EA71 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AF46E161189EAA180074EA71 /* libMonsoon.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AF46E163189EAA180074EA71 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AF46E164189EAA180074EA71 /* Foundation.framework */,
+				AF46E166189EAA180074EA71 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		AF46E168189EAA180074EA71 /* Monsoon */ = {
+			isa = PBXGroup;
+			children = (
+				AF46E170189EAA180074EA71 /* Monsoon.h */,
+				AF46E171189EAA180074EA71 /* Monsoon.m */,
+				AF46E169189EAA180074EA71 /* Package */,
+				AF46E16D189EAA180074EA71 /* Supporting Files */,
+			);
+			path = Monsoon;
+			sourceTree = "<group>";
+		};
+		AF46E169189EAA180074EA71 /* Package */ = {
+			isa = PBXGroup;
+			children = (
+				AF46E16A189EAA180074EA71 /* DEBIAN */,
+				AF46E173189EAA180074EA71 /* usr */,
+			);
+			name = Package;
+			sourceTree = "<group>";
+		};
+		AF46E16A189EAA180074EA71 /* DEBIAN */ = {
+			isa = PBXGroup;
+			children = (
+				AF46E16B189EAA180074EA71 /* control.txt */,
+				AF46E16C189EAA180074EA71 /* control */,
+			);
+			name = DEBIAN;
+			sourceTree = "<group>";
+		};
+		AF46E16D189EAA180074EA71 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				AF46E16E189EAA180074EA71 /* PackageVersion.plist */,
+				AF46E16F189EAA180074EA71 /* Monsoon-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		AF46E173189EAA180074EA71 /* usr */ = {
+			isa = PBXGroup;
+			children = (
+				AF46E174189EAA180074EA71 /* lib */,
+			);
+			name = usr;
+			sourceTree = "<group>";
+		};
+		AF46E174189EAA180074EA71 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				AF46E175189EAA180074EA71 /* 0xdeadfa11 */,
+			);
+			name = lib;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		AF46E15E189EAA180074EA71 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		AF46E160189EAA180074EA71 /* Monsoon */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AF46E178189EAA180074EA71 /* Build configuration list for PBXNativeTarget "Monsoon" */;
+			buildPhases = (
+				AF46E15C189EAA180074EA71 /* Sources */,
+				AF46E15D189EAA180074EA71 /* Frameworks */,
+				AF46E15E189EAA180074EA71 /* Headers */,
+				AF46E15F189EAA180074EA71 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Monsoon;
+			productName = Monsoon;
+			productReference = AF46E161189EAA180074EA71 /* libMonsoon.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AF46E158189EAA180074EA71 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+			};
+			buildConfigurationList = AF46E15B189EAA180074EA71 /* Build configuration list for PBXProject "Monsoon" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = AF46E157189EAA180074EA71;
+			productRefGroup = AF46E162189EAA180074EA71 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AF46E160189EAA180074EA71 /* Monsoon */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		AF46E15F189EAA180074EA71 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/opt/iOSOpenDev/bin/iosod --xcbp";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AF46E15C189EAA180074EA71 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AF46E172189EAA180074EA71 /* Monsoon.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AF46E176189EAA180074EA71 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_ENABLE_MODULES = YES;
+				COPY_PHASE_STRIP = NO;
+				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch (*) .DS_Store CVS .svn .git .hg *.xcodeproj *.xcode *.pbproj *.pbxproj";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(iOSOpenDevPath)/frameworks/**",
+					"$(SDKROOT)/System/Library/PrivateFrameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(iOSOpenDevPath)/include/**";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = "$(iOSOpenDevPath)/lib/**";
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = NO;
+				iOSOpenDevPath = /opt/iOSOpenDev;
+			};
+			name = Debug;
+		};
+		AF46E177189EAA180074EA71 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_ENABLE_MODULES = YES;
+				COPY_PHASE_STRIP = YES;
+				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch (*) .DS_Store CVS .svn .git .hg *.xcodeproj *.xcode *.pbproj *.pbxproj";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(iOSOpenDevPath)/frameworks/**",
+					"$(SDKROOT)/System/Library/PrivateFrameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(iOSOpenDevPath)/include/**";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = "$(iOSOpenDevPath)/lib/**";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				iOSOpenDevPath = /opt/iOSOpenDev;
+			};
+			name = Release;
+		};
+		AF46E179189EAA180074EA71 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Monsoon/Monsoon-Prefix.pch";
+				INSTALL_PATH = /usr/lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				iOSOpenDevBuildPackageOnAnyBuild = NO;
+				iOSOpenDevCopyOnBuild = NO;
+				iOSOpenDevDevice = "";
+				iOSOpenDevInstallOnAnyBuild = NO;
+				iOSOpenDevInstallOnProfiling = YES;
+				iOSOpenDevRespringOnInstall = YES;
+				iOSOpenDevUsePackageVersionPList = YES;
+			};
+			name = Debug;
+		};
+		AF46E17A189EAA180074EA71 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Monsoon/Monsoon-Prefix.pch";
+				INSTALL_PATH = /usr/lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				iOSOpenDevBuildPackageOnAnyBuild = NO;
+				iOSOpenDevCopyOnBuild = NO;
+				iOSOpenDevDevice = "";
+				iOSOpenDevInstallOnAnyBuild = NO;
+				iOSOpenDevInstallOnProfiling = YES;
+				iOSOpenDevRespringOnInstall = YES;
+				iOSOpenDevUsePackageVersionPList = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AF46E15B189EAA180074EA71 /* Build configuration list for PBXProject "Monsoon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AF46E176189EAA180074EA71 /* Debug */,
+				AF46E177189EAA180074EA71 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AF46E178189EAA180074EA71 /* Build configuration list for PBXNativeTarget "Monsoon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AF46E179189EAA180074EA71 /* Debug */,
+				AF46E17A189EAA180074EA71 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AF46E158189EAA180074EA71 /* Project object */;
+}

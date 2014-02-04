@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'Monsoon' target in the 'Monsoon' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif
