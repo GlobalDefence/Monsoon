@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		AF46E165189EAA180074EA71 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF46E164189EAA180074EA71 /* Foundation.framework */; };
 		AF46E167189EAA180074EA71 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF46E166189EAA180074EA71 /* UIKit.framework */; };
-		AF46E172189EAA180074EA71 /* Monsoon.m in Sources */ = {isa = PBXBuildFile; fileRef = AF46E171189EAA180074EA71 /* Monsoon.m */; };
+		AF46E172189EAA180074EA71 /* Monsoon.mm in Sources */ = {isa = PBXBuildFile; fileRef = AF46E171189EAA180074EA71 /* Monsoon.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,7 +21,7 @@
 		AF46E16E189EAA180074EA71 /* PackageVersion.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PackageVersion.plist; sourceTree = "<group>"; };
 		AF46E16F189EAA180074EA71 /* Monsoon-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Monsoon-Prefix.pch"; sourceTree = "<group>"; };
 		AF46E170189EAA180074EA71 /* Monsoon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Monsoon.h; sourceTree = "<group>"; };
-		AF46E171189EAA180074EA71 /* Monsoon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Monsoon.m; sourceTree = "<group>"; };
+		AF46E171189EAA180074EA71 /* Monsoon.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Monsoon.mm; sourceTree = "<group>"; };
 		AF46E175189EAA180074EA71 /* 0xdeadfa11 */ = {isa = PBXFileReference; lastKnownFileType = text; name = 0xdeadfa11; path = Package/usr/lib/0xdeadfa11; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -68,7 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				AF46E170189EAA180074EA71 /* Monsoon.h */,
-				AF46E171189EAA180074EA71 /* Monsoon.m */,
+				AF46E171189EAA180074EA71 /* Monsoon.mm */,
 				AF46E169189EAA180074EA71 /* Package */,
 				AF46E16D189EAA180074EA71 /* Supporting Files */,
 			);
@@ -195,7 +195,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AF46E172189EAA180074EA71 /* Monsoon.m in Sources */,
+				AF46E172189EAA180074EA71 /* Monsoon.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,6 +321,7 @@
 				AF46E17A189EAA180074EA71 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

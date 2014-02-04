@@ -13,6 +13,8 @@
 #include <objc/runtime.h>
 #import <Foundation/Foundation.h>
 
+#define APP_ID "monsoon.support.mach.port"
+#define MACH_PORT_NAME APP_ID
 
 @interface SBAppSliderController : UIViewController
 {
@@ -35,6 +37,7 @@ static IMP sOriginalImp = NULL;
     sOriginalImp = method_getImplementation(originalMeth);
 	Method replacementMeth = class_getInstanceMethod(NSClassFromString(@"Monsoon"), @selector(patchedLaunch:));
 	method_exchangeImplementations(originalMeth, replacementMeth);
+    
 }
 
 - (void)patchedLaunch:(_Bool)arg1{
