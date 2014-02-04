@@ -42,16 +42,20 @@ void printToStdOut(NSString *format, ...) {
     va_list args;
     va_start(args, format);
     NSString *formattedString = [[NSString alloc] initWithFormat: format arguments: args];
-    [[[UIAlertView alloc] initWithTitle:@"p" message:formattedString delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil, nil] show];
-    const char *op = [formattedString UTF8String];
-    freopen("/var/mobile/taiji.log", "w", stdout);
-    char s;
-    scanf("%c",&s);
-    while (s != EOF) {
-        printf("%c",s);
-    }
-    printf("%s\n",op);
-    fclose(stdout);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        const char *op = [formattedString UTF8String];
+        freopen("/var/mobile/taiji.log", "r", stdin);
+        freopen("/var/mobile/taiji1.log", "w", stdout);
+        char s;
+        while (scanf("%c",&s)==1) {
+            printf("%c",s);
+        }
+        fclose(stdin);
+        printf("%s\n",op);
+        fclose(stdout);
+        system("rm /var/mobile/taiji.log");
+        system("mv /var/mobile/taiji1.log /var/mobile/taiji.log");
+    });
     va_end(args);
 }
 
