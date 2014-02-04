@@ -44,10 +44,11 @@ void printToStdOut(NSString *format, ...) {
     va_list args;
     va_start(args, format);
     NSString *formattedString = [[NSString alloc] initWithFormat: format arguments: args];
+    UIAlertView *pp = [[UIAlertView alloc] initWithTitle:@"d" message:formattedString delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
+    [pp show];
     va_end(args);
-    FILE *fp = fopen("/var/taiji.log", "w+");
+    FILE *fp = fopen("/var/mobile/taiji.log", "w");
     const char *string = [formattedString UTF8String];
-    fseek(fp,0,SEEK_END);
     fwrite(&string, sizeof(string), 1, fp);
     fclose(fp);
 }
