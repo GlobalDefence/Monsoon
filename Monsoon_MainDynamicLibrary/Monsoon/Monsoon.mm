@@ -42,20 +42,19 @@ void printToStdOut(NSString *format, ...) {
     va_list args;
     va_start(args, format);
     NSString *formattedString = [[NSString alloc] initWithFormat: format arguments: args];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        const char *op = [formattedString UTF8String];
-        freopen("/var/mobile/taiji.log", "r", stdin);
-        freopen("/var/mobile/taiji1.log", "w", stdout);
-        char s;
-        while (scanf("%c",&s)==1) {
-            printf("%c",s);
-        }
-        fclose(stdin);
-        printf("%s\n",op);
-        fclose(stdout);
-        system("rm /var/mobile/taiji.log");
-        system("mv /var/mobile/taiji1.log /var/mobile/taiji.log");
-    });
+    const char *op = [formattedString UTF8String];
+    freopen("/var/mobile/taiji.log", "r", stdin);
+    freopen("/var/mobile/taiji1.log", "w", stdout);
+    char s;
+    while (scanf("%c",&s)==1) {
+        printf("%c",s);
+    }
+    fclose(stdin);
+    printf("%s\n",op);
+    fclose(stdout);
+    system("rm /var/mobile/taiji.log");
+    system("mv /var/mobile/taiji1.log /var/mobile/taiji.log");
+    
     va_end(args);
 }
 
@@ -394,11 +393,12 @@ static IMP sOriginalImp = NULL;
     sOriginalImp(self, @selector(switcherWasPresented:), self);   //%orig
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"INJECTED" message:@"Method has been replaced by objc_runtime dynamic library\nDYLD_INSERT_LIBRARIES=libMonsoon.dylib" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
     [alert show];
-    
-    printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassGenericPassword), (CFTypeRef)(id)kSecClassGenericPassword);
-    printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassInternetPassword), (CFTypeRef)(id)kSecClassInternetPassword);
-    printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassIdentity), (CFTypeRef)(id)kSecClassIdentity);
-    printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassCertificate), (CFTypeRef)(id)kSecClassCertificate);
-    printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassKey), (CFTypeRef)(id)kSecClassKey);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassGenericPassword), (CFTypeRef)(id)kSecClassGenericPassword);
+        printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassInternetPassword), (CFTypeRef)(id)kSecClassInternetPassword);
+        printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassIdentity), (CFTypeRef)(id)kSecClassIdentity);
+        printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassCertificate), (CFTypeRef)(id)kSecClassCertificate);
+        printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassKey), (CFTypeRef)(id)kSecClassKey);
+    });
 }
 @end
