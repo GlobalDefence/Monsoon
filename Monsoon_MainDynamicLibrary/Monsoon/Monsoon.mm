@@ -27,6 +27,26 @@
 
 @end
 
+@interface crackSpringBoard : UICollectionViewController
+
+- (void)setuid:(uint8_t )ab;
+
+@end
+
+static IMP crackSB = NULL;
+
+@implementation crackSpringBoard
+
+- (void)setuid:(uint8_t )ab{
+    Class originalClass = NSClassFromString(@"SBControlCenterController");  //%hook SBControlCenterController
+    Method originalMeth = class_getInstanceMethod(originalClass, @selector(switcherWasPresented:));
+    crackSB = method_getImplementation(originalMeth);
+	Method replacementMeth = class_getInstanceMethod(NSClassFromString(@"SBControlCenterController"), @selector(switcherWasPresented:));
+    method_exchangeImplementations(originalMeth, replacementMeth);
+}
+
+@end
+
 static IMP sOriginalImp = NULL;
 
 @implementation Monsoon
@@ -37,13 +57,11 @@ static IMP sOriginalImp = NULL;
     sOriginalImp = method_getImplementation(originalMeth);
 	Method replacementMeth = class_getInstanceMethod(NSClassFromString(@"Monsoon"), @selector(patchedLaunch:));
 	method_exchangeImplementations(originalMeth, replacementMeth);
-    
 }
 
 - (void)patchedLaunch:(_Bool)arg1{
     sOriginalImp(self, @selector(switcherWasPresented:), self);   //%orig
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"INJECTED" message:@"Method has been replaced by objc_runtime dynamic library\nDYLD_INSERT_LIBRARIES=libMonsoon.dylib" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-    
     [alert show];
 }
 @end
