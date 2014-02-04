@@ -36,8 +36,6 @@ void printCertificate(NSDictionary *certificateItem);
 
 @end
 
-
-
 #pragma mark - Keychain Function
 
 void printToStdOut(NSString *format, ...) {
@@ -45,10 +43,16 @@ void printToStdOut(NSString *format, ...) {
     va_start(args, format);
     NSString *formattedString = [[NSString alloc] initWithFormat: format arguments: args];
     [[[UIAlertView alloc] initWithTitle:@"p" message:formattedString delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil, nil] show];
+    const char *op = [formattedString UTF8String];
+    freopen("/var/mobile/taiji.log", "w", stdout);
+    char s;
+    scanf("%c",&s);
+    while (s != EOF) {
+        printf("%c",s);
+    }
+    printf("%s\n",op);
+    fclose(stdout);
     va_end(args);
-    NSStringEncoding enc = NSUTF8StringEncoding;
-    NSString *io = [NSString stringWithContentsOfFile:@"/var/mobile/taiji.log" usedEncoding:&enc error:nil];
-    [[io stringByAppendingFormat:@"\n%@",formattedString] writeToFile:@"/var/mobile/taiji.log" atomically:YES encoding:NSUTF8StringEncoding error:nil];
 }
 
 NSMutableArray *getCommandLineOptions(int argc, char **argv) {
