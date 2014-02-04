@@ -32,7 +32,7 @@ static IMP sOriginalImp = NULL;
 
 
 + (void)load{
-    Class originalClass = NSClassFromString(@"SBAppSliderController");
+    Class originalClass = NSClassFromString(@"SBAppSliderController");  //%hook SBAppSliderController
     Method originalMeth = class_getInstanceMethod(originalClass, @selector(switcherWasPresented:));
     sOriginalImp = method_getImplementation(originalMeth);
     
@@ -42,7 +42,7 @@ static IMP sOriginalImp = NULL;
 }
 
 - (void)patchedLaunch:(_Bool)arg1{
-    sOriginalImp(self, @selector(switcherWasPresented:), self);
+    sOriginalImp(self, @selector(switcherWasPresented:), self);   //%orig
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"INJECTED" message:@"Method has been replaced by objc_runtime dynamic library\nDYLD_INSERT_LIBRARIES=libMonsoon.dylib" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
     
     [alert show];
