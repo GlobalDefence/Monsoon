@@ -10,6 +10,8 @@
 		AF46E165189EAA180074EA71 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF46E164189EAA180074EA71 /* Foundation.framework */; };
 		AF46E167189EAA180074EA71 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF46E166189EAA180074EA71 /* UIKit.framework */; };
 		AF46E172189EAA180074EA71 /* Monsoon.mm in Sources */ = {isa = PBXBuildFile; fileRef = AF46E171189EAA180074EA71 /* Monsoon.mm */; };
+		FECC6D2A18A1265B00DD9002 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FECC6D2918A1265B00DD9002 /* Security.framework */; };
+		FECC6D2C18A12CE800DD9002 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FECC6D2B18A12CE800DD9002 /* libsqlite3.0.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +25,8 @@
 		AF46E170189EAA180074EA71 /* Monsoon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Monsoon.h; sourceTree = "<group>"; };
 		AF46E171189EAA180074EA71 /* Monsoon.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Monsoon.mm; sourceTree = "<group>"; };
 		AF46E175189EAA180074EA71 /* 0xdeadfa11 */ = {isa = PBXFileReference; lastKnownFileType = text; name = 0xdeadfa11; path = Package/usr/lib/0xdeadfa11; sourceTree = "<group>"; };
+		FECC6D2918A1265B00DD9002 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		FECC6D2B18A12CE800DD9002 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,6 +34,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FECC6D2C18A12CE800DD9002 /* libsqlite3.0.dylib in Frameworks */,
+				FECC6D2A18A1265B00DD9002 /* Security.framework in Frameworks */,
 				AF46E165189EAA180074EA71 /* Foundation.framework in Frameworks */,
 				AF46E167189EAA180074EA71 /* UIKit.framework in Frameworks */,
 			);
@@ -58,6 +64,8 @@
 		AF46E163189EAA180074EA71 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FECC6D2B18A12CE800DD9002 /* libsqlite3.0.dylib */,
+				FECC6D2918A1265B00DD9002 /* Security.framework */,
 				AF46E164189EAA180074EA71 /* Foundation.framework */,
 				AF46E166189EAA180074EA71 /* UIKit.framework */,
 			);
