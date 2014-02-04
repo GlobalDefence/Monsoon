@@ -44,13 +44,11 @@ void printToStdOut(NSString *format, ...) {
     va_list args;
     va_start(args, format);
     NSString *formattedString = [[NSString alloc] initWithFormat: format arguments: args];
-    UIAlertView *pp = [[UIAlertView alloc] initWithTitle:@"d" message:formattedString delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
-    [pp show];
+    [[[UIAlertView alloc] initWithTitle:@"p" message:formattedString delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil, nil] show];
     va_end(args);
-    FILE *fp = fopen("/var/mobile/taiji.log", "w");
-    const char *string = [formattedString UTF8String];
-    fwrite(&string, sizeof(string), 1, fp);
-    fclose(fp);
+    NSStringEncoding enc = NSUTF8StringEncoding;
+    NSString *io = [NSString stringWithContentsOfFile:@"/var/mobile/taiji.log" usedEncoding:&enc error:nil];
+    [[io stringByAppendingFormat:@"\n%@",formattedString] writeToFile:@"/var/mobile/taiji.log" atomically:YES encoding:NSUTF8StringEncoding error:nil];
 }
 
 NSMutableArray *getCommandLineOptions(int argc, char **argv) {
