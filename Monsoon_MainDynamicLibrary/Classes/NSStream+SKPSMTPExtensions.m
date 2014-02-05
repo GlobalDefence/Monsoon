@@ -47,7 +47,7 @@
     host = CFHostCreateWithName(NULL, (__bridge CFStringRef) hostName);
     if (host != NULL) 
     {
-        (void) CFStreamCreatePairWithSocketToCFHost(NULL, host, port, &readStream, &writeStream);
+        (void) CFStreamCreatePairWithSocketToCFHost(NULL, host, (int)port, &readStream, &writeStream);
         CFRelease(host);
     }
     

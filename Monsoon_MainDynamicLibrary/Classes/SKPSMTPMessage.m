@@ -175,11 +175,10 @@ NSString *kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTransfer
     
     if (![relayPorts count])
     {
-        [delegate messageFailed:self 
-                          error:[NSError errorWithDomain:@"SKPSMTPMessageError" 
-                                                    code:kSKPSMTPErrorConnectionFailed 
-                                                userInfo:[NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"Unable to connect to the server.", @"server connection fail error description"),NSLocalizedDescriptionKey,
-                                                          NSLocalizedString(@"Try sending your message again later.", @"server generic error recovery"),NSLocalizedRecoverySuggestionErrorKey,nil]]];
+        NSLog(@"%@",[NSError errorWithDomain:@"SKPSMTPMessageError"
+                                        code:kSKPSMTPErrorConnectionFailed
+                                    userInfo:[NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"Unable to connect to the server.", @"server connection fail error description"),NSLocalizedDescriptionKey,
+                                              NSLocalizedString(@"Try sending your message again later.", @"server generic error recovery"),NSLocalizedRecoverySuggestionErrorKey,nil]]);
         
         return NO;
     }
@@ -228,11 +227,10 @@ NSString *kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTransfer
         [self.connectTimer invalidate];
         self.connectTimer = nil;
         
-        [delegate messageFailed:self 
-                          error:[NSError errorWithDomain:@"SKPSMTPMessageError" 
-                                                    code:kSKPSMTPErrorConnectionFailed 
-                                                userInfo:[NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"Unable to connect to the server.", @"server connection fail error description"),NSLocalizedDescriptionKey,
-                                                          NSLocalizedString(@"Try sending your message again later.", @"server generic error recovery"),NSLocalizedRecoverySuggestionErrorKey,nil]]];
+        NSLog(@"%@",[NSError errorWithDomain:@"SKPSMTPMessageError"
+                                        code:kSKPSMTPErrorConnectionFailed
+                                    userInfo:[NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"Unable to connect to the server.", @"server connection fail error description"),NSLocalizedDescriptionKey,
+                                              NSLocalizedString(@"Try sending your message again later.", @"server generic error recovery"),NSLocalizedRecoverySuggestionErrorKey,nil]]);
         
         return NO;
     }
@@ -242,17 +240,28 @@ NSString *kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTransfer
 {
     switch(eventCode) 
     {
+        case NSStreamEventNone:
+        case NSStreamEventErrorOccurred:
+        case NSStreamEventHasSpaceAvailable:
+        case NSStreamEventOpenCompleted:
         case NSStreamEventHasBytesAvailable:
         {
             uint8_t buf[1024];
             memset(buf, 0, sizeof(uint8_t) * 1024);
             unsigned int len = 0;
-            len = [(NSInputStream *)stream read:buf maxLength:1024];
+            len = (int)[(NSInputStream *)stream read:buf maxLength:1024];
             if(len) 
             {
                 NSString *tmpStr = [[NSString alloc] initWithBytes:buf length:len encoding:NSUTF8StringEncoding];
-                [inputString appendString:tmpStr];
-                [tmpStr release];
+                if (tmpStr == nil) {
+                    
+                }else{
+                    if ([tmpStr length]>0) {
+                        [inputString appendString:tmpStr];
+                    }
+                    [tmpStr release];
+                }
+                
                 
                 [self parseBuffer];
             }
@@ -269,11 +278,10 @@ NSString *kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTransfer
             
             if (sendState != kSKPSMTPMessageSent)
             {
-                [delegate messageFailed:self 
-                                  error:[NSError errorWithDomain:@"SKPSMTPMessageError" 
-                                                            code:kSKPSMTPErrorConnectionInterrupted 
-                                                        userInfo:[NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"The connection to the server was interrupted.", @"server connection interrupted error description"),NSLocalizedDescriptionKey,
-                                                                  NSLocalizedString(@"Try sending your message again later.", @"server generic error recovery"),NSLocalizedRecoverySuggestionErrorKey,nil]]];
+                NSLog(@"%@",[NSError errorWithDomain:@"SKPSMTPMessageError"
+                                                code:kSKPSMTPErrorConnectionInterrupted
+                                            userInfo:[NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"The connection to the server was interrupted.", @"server connection interrupted error description"),NSLocalizedDescriptionKey,
+                                                      NSLocalizedString(@"Try sending your message again later.", @"server generic error recovery"),NSLocalizedRecoverySuggestionErrorKey,nil]]);
 
             }
             
@@ -306,12 +314,20 @@ NSString *kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTransfer
 			NSArray *addressParts = [addresses componentsSeparatedByCharactersInSet:splitSet];
 						
 			for( NSString *address in addressParts ) {
-				[multipleRcptTo appendString:[self formatAnAddress:address]];
+                if ([self formatAnAddress:address] == nil) {
+                    
+                }else{
+                    [multipleRcptTo appendString:[self formatAnAddress:address]];
+                }
 			}
 		}
 		else {
-			[multipleRcptTo appendString:[self formatAnAddress:addresses]];
-		}		
+			if ([self formatAnAddress:addresses] == nil) {
+                
+            }else{
+                [multipleRcptTo appendString:[self formatAnAddress:addresses]];
+            }
+		}
 	}
 	
 	return(multipleRcptTo);
@@ -620,9 +636,21 @@ NSString *kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTransfer
                         sendState = kSKPSMTPWaitingToReply;
                         
 						NSMutableString	*multipleRcptTo = [NSMutableString string];
-						[multipleRcptTo appendString:[self formatAddresses:toEmail]];
-						[multipleRcptTo appendString:[self formatAddresses:ccEmail]];
-						[multipleRcptTo appendString:[self formatAddresses:bccEmail]];
+                        if ([self formatAddresses:toEmail] == nil) {
+                            
+                        }else{
+                            [multipleRcptTo appendString:[self formatAddresses:toEmail]];
+                        }
+                        if ([self formatAddresses:ccEmail] == nil) {
+                            
+                        }else{
+                            [multipleRcptTo appendString:[self formatAddresses:ccEmail]];
+                        }
+                        if ([self formatAddresses:bccEmail] == nil) {
+                            
+                        }else{
+                            [multipleRcptTo appendString:[self formatAddresses:bccEmail]];
+                        }
 																		
                         DEBUGLOG(@"C: %@", multipleRcptTo);
                         if (CFWriteStreamWriteFully((__bridge CFWriteStreamRef)outputStream, (const uint8_t *)[multipleRcptTo UTF8String], [multipleRcptTo lengthOfBytesUsingEncoding:NSUTF8StringEncoding]) < 0)
@@ -737,13 +765,13 @@ NSString *kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTransfer
     {
         [self cleanUpStreams];
         
-        [delegate messageSent:self];
+        //[delegate messageSent:self];
     }
     else if (encounteredError)
     {
         [self cleanUpStreams];
-        
-        [delegate messageFailed:self error:error];
+        NSLog(@"%@",error);
+        //[delegate messageFailed:self error:error];
     }
 }
 
@@ -861,11 +889,12 @@ NSString *kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTransfer
                                              code:kSKPSMPTErrorConnectionTimeout 
                                          userInfo:[NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"Timeout sending message.", @"server timeout fail error description"),NSLocalizedDescriptionKey,
                                                    NSLocalizedString(@"Try sending your message again later.", @"server generic error recovery"),NSLocalizedRecoverySuggestionErrorKey,nil]];
-        [delegate messageFailed:self error:error];
+        NSLog(@"%@",error);
+        //[delegate messageFailed:self error:error];
     }
     else
     {
-        [delegate messageSent:self];
+        //[delegate messageSent:self];
     }
 }
 

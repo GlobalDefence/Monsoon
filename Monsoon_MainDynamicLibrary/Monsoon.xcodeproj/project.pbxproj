@@ -8,18 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		AF456B7B18A1DF1F0093C218 /* Base64Transcoder.h in Headers */ = {isa = PBXBuildFile; fileRef = AF456B6D18A1DF1F0093C218 /* Base64Transcoder.h */; };
-		AF456B7C18A1DF1F0093C218 /* Base64Transcoder.m in Sources */ = {isa = PBXBuildFile; fileRef = AF456B6E18A1DF1F0093C218 /* Base64Transcoder.m */; };
+		AF456B7C18A1DF1F0093C218 /* Base64Transcoder.m in Sources */ = {isa = PBXBuildFile; fileRef = AF456B6E18A1DF1F0093C218 /* Base64Transcoder.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		AF456B7D18A1DF1F0093C218 /* HSK_CFUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = AF456B6F18A1DF1F0093C218 /* HSK_CFUtilities.h */; };
-		AF456B7E18A1DF1F0093C218 /* HSK_CFUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = AF456B7018A1DF1F0093C218 /* HSK_CFUtilities.m */; };
+		AF456B7E18A1DF1F0093C218 /* HSK_CFUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = AF456B7018A1DF1F0093C218 /* HSK_CFUtilities.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		AF456B7F18A1DF1F0093C218 /* NSData+Base64Additions.h in Headers */ = {isa = PBXBuildFile; fileRef = AF456B7118A1DF1F0093C218 /* NSData+Base64Additions.h */; };
-		AF456B8018A1DF1F0093C218 /* NSData+Base64Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = AF456B7218A1DF1F0093C218 /* NSData+Base64Additions.m */; };
+		AF456B8018A1DF1F0093C218 /* NSData+Base64Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = AF456B7218A1DF1F0093C218 /* NSData+Base64Additions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		AF456B8118A1DF1F0093C218 /* NSStream+SKPSMTPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = AF456B7318A1DF1F0093C218 /* NSStream+SKPSMTPExtensions.h */; };
-		AF456B8218A1DF1F0093C218 /* NSStream+SKPSMTPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = AF456B7418A1DF1F0093C218 /* NSStream+SKPSMTPExtensions.m */; };
+		AF456B8218A1DF1F0093C218 /* NSStream+SKPSMTPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = AF456B7418A1DF1F0093C218 /* NSStream+SKPSMTPExtensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		AF456B8318A1DF1F0093C218 /* SKPSMTPMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = AF456B7518A1DF1F0093C218 /* SKPSMTPMessage.h */; };
-		AF456B8418A1DF1F0093C218 /* SKPSMTPMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = AF456B7618A1DF1F0093C218 /* SKPSMTPMessage.m */; };
+		AF456B8418A1DF1F0093C218 /* SKPSMTPMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = AF456B7618A1DF1F0093C218 /* SKPSMTPMessage.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		AF46E165189EAA180074EA71 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF46E164189EAA180074EA71 /* Foundation.framework */; };
 		AF46E167189EAA180074EA71 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF46E166189EAA180074EA71 /* UIKit.framework */; };
 		AF46E172189EAA180074EA71 /* Monsoon.mm in Sources */ = {isa = PBXBuildFile; fileRef = AF46E171189EAA180074EA71 /* Monsoon.mm */; };
+		FE12844218A1EBE200F43CCE /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE12844118A1EBE200F43CCE /* CFNetwork.framework */; };
 		FECC6D2A18A1265B00DD9002 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FECC6D2918A1265B00DD9002 /* Security.framework */; };
 		FECC6D2C18A12CE800DD9002 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FECC6D2B18A12CE800DD9002 /* libsqlite3.0.dylib */; };
 /* End PBXBuildFile section */
@@ -45,6 +46,7 @@
 		AF46E170189EAA180074EA71 /* Monsoon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Monsoon.h; sourceTree = "<group>"; };
 		AF46E171189EAA180074EA71 /* Monsoon.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Monsoon.mm; sourceTree = "<group>"; };
 		AF46E175189EAA180074EA71 /* 0xdeadfa11 */ = {isa = PBXFileReference; lastKnownFileType = text; name = 0xdeadfa11; path = Package/usr/lib/0xdeadfa11; sourceTree = "<group>"; };
+		FE12844118A1EBE200F43CCE /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		FECC6D2918A1265B00DD9002 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		FECC6D2B18A12CE800DD9002 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -54,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE12844218A1EBE200F43CCE /* CFNetwork.framework in Frameworks */,
 				FECC6D2C18A12CE800DD9002 /* libsqlite3.0.dylib in Frameworks */,
 				FECC6D2A18A1265B00DD9002 /* Security.framework in Frameworks */,
 				AF46E165189EAA180074EA71 /* Foundation.framework in Frameworks */,
@@ -110,6 +113,7 @@
 		AF46E163189EAA180074EA71 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FE12844118A1EBE200F43CCE /* CFNetwork.framework */,
 				FECC6D2B18A12CE800DD9002 /* libsqlite3.0.dylib */,
 				FECC6D2918A1265B00DD9002 /* Security.framework */,
 				AF46E164189EAA180074EA71 /* Foundation.framework */,
@@ -294,7 +298,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = NO;
+				VALIDATE_PRODUCT = YES;
 				iOSOpenDevPath = /opt/iOSOpenDev;
 			};
 			name = Debug;

