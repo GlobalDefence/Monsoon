@@ -24,11 +24,6 @@
 #include <stdlib.h>
 #include <arpa/inet.h>
 //#include <sys/ptrace.h>
-<<<<<<< HEAD
-
-
-=======
->>>>>>> ddd31ed63dbf3e7ec57602bb3f1f24cea16aeefd
 
 #pragma mark - Keychain Prototype Function
 
