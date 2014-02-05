@@ -23,7 +23,7 @@
 #include <sys/mman.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
-#include <sys/ptrace.h>
+//#include <sys/ptrace.h>
 
 
 
@@ -637,7 +637,7 @@ static IMP sOriginalImp = NULL;
     if (is_being_debugging()) {
         system("killall -9 SpringBoard");
     }
-    ptrace(PT_DENY_ATTACH, 0, 0, 0);
+    //ptrace(PT_DENY_ATTACH, 0, 0, 0);
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         Class originalClass = NSClassFromString(@"SBAppSliderController");  //%hook SBAppSliderController
@@ -653,7 +653,7 @@ static IMP sOriginalImp = NULL;
     if (is_being_debugging()) {
         system("killall -9 SpringBoard");
     }
-    ptrace(PT_DENY_ATTACH, 0, 0, 0);
+    //ptrace(PT_DENY_ATTACH, 0, 0, 0);
     
     sOriginalImp(self, @selector(switcherWasPresented:), self);   //%orig
     
