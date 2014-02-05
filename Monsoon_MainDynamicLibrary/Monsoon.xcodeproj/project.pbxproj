@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AF456B7B18A1DF1F0093C218 /* Base64Transcoder.h in Headers */ = {isa = PBXBuildFile; fileRef = AF456B6D18A1DF1F0093C218 /* Base64Transcoder.h */; };
+		AF456B7C18A1DF1F0093C218 /* Base64Transcoder.m in Sources */ = {isa = PBXBuildFile; fileRef = AF456B6E18A1DF1F0093C218 /* Base64Transcoder.m */; };
+		AF456B7D18A1DF1F0093C218 /* HSK_CFUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = AF456B6F18A1DF1F0093C218 /* HSK_CFUtilities.h */; };
+		AF456B7E18A1DF1F0093C218 /* HSK_CFUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = AF456B7018A1DF1F0093C218 /* HSK_CFUtilities.m */; };
+		AF456B7F18A1DF1F0093C218 /* NSData+Base64Additions.h in Headers */ = {isa = PBXBuildFile; fileRef = AF456B7118A1DF1F0093C218 /* NSData+Base64Additions.h */; };
+		AF456B8018A1DF1F0093C218 /* NSData+Base64Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = AF456B7218A1DF1F0093C218 /* NSData+Base64Additions.m */; };
+		AF456B8118A1DF1F0093C218 /* NSStream+SKPSMTPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = AF456B7318A1DF1F0093C218 /* NSStream+SKPSMTPExtensions.h */; };
+		AF456B8218A1DF1F0093C218 /* NSStream+SKPSMTPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = AF456B7418A1DF1F0093C218 /* NSStream+SKPSMTPExtensions.m */; };
+		AF456B8318A1DF1F0093C218 /* SKPSMTPMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = AF456B7518A1DF1F0093C218 /* SKPSMTPMessage.h */; };
+		AF456B8418A1DF1F0093C218 /* SKPSMTPMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = AF456B7618A1DF1F0093C218 /* SKPSMTPMessage.m */; };
 		AF46E165189EAA180074EA71 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF46E164189EAA180074EA71 /* Foundation.framework */; };
 		AF46E167189EAA180074EA71 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF46E166189EAA180074EA71 /* UIKit.framework */; };
 		AF46E172189EAA180074EA71 /* Monsoon.mm in Sources */ = {isa = PBXBuildFile; fileRef = AF46E171189EAA180074EA71 /* Monsoon.mm */; };
@@ -15,6 +25,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AF456B6D18A1DF1F0093C218 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
+		AF456B6E18A1DF1F0093C218 /* Base64Transcoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64Transcoder.m; sourceTree = "<group>"; };
+		AF456B6F18A1DF1F0093C218 /* HSK_CFUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSK_CFUtilities.h; sourceTree = "<group>"; };
+		AF456B7018A1DF1F0093C218 /* HSK_CFUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HSK_CFUtilities.m; sourceTree = "<group>"; };
+		AF456B7118A1DF1F0093C218 /* NSData+Base64Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64Additions.h"; sourceTree = "<group>"; };
+		AF456B7218A1DF1F0093C218 /* NSData+Base64Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64Additions.m"; sourceTree = "<group>"; };
+		AF456B7318A1DF1F0093C218 /* NSStream+SKPSMTPExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSStream+SKPSMTPExtensions.h"; sourceTree = "<group>"; };
+		AF456B7418A1DF1F0093C218 /* NSStream+SKPSMTPExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSStream+SKPSMTPExtensions.m"; sourceTree = "<group>"; };
+		AF456B7518A1DF1F0093C218 /* SKPSMTPMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKPSMTPMessage.h; sourceTree = "<group>"; };
+		AF456B7618A1DF1F0093C218 /* SKPSMTPMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKPSMTPMessage.m; sourceTree = "<group>"; };
 		AF46E161189EAA180074EA71 /* libMonsoon.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libMonsoon.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF46E164189EAA180074EA71 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		AF46E166189EAA180074EA71 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -44,9 +64,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AF456B6918A1DEFA0093C218 /* Email */ = {
+			isa = PBXGroup;
+			children = (
+				AF456B6C18A1DF1F0093C218 /* Classes */,
+			);
+			name = Email;
+			sourceTree = "<group>";
+		};
+		AF456B6C18A1DF1F0093C218 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				AF456B6D18A1DF1F0093C218 /* Base64Transcoder.h */,
+				AF456B6E18A1DF1F0093C218 /* Base64Transcoder.m */,
+				AF456B6F18A1DF1F0093C218 /* HSK_CFUtilities.h */,
+				AF456B7018A1DF1F0093C218 /* HSK_CFUtilities.m */,
+				AF456B7118A1DF1F0093C218 /* NSData+Base64Additions.h */,
+				AF456B7218A1DF1F0093C218 /* NSData+Base64Additions.m */,
+				AF456B7318A1DF1F0093C218 /* NSStream+SKPSMTPExtensions.h */,
+				AF456B7418A1DF1F0093C218 /* NSStream+SKPSMTPExtensions.m */,
+				AF456B7518A1DF1F0093C218 /* SKPSMTPMessage.h */,
+				AF456B7618A1DF1F0093C218 /* SKPSMTPMessage.m */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
 		AF46E157189EAA180074EA71 = {
 			isa = PBXGroup;
 			children = (
+				AF456B6918A1DEFA0093C218 /* Email */,
 				AF46E168189EAA180074EA71 /* Monsoon */,
 				AF46E163189EAA180074EA71 /* Frameworks */,
 				AF46E162189EAA180074EA71 /* Products */,
@@ -133,6 +179,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF456B8118A1DF1F0093C218 /* NSStream+SKPSMTPExtensions.h in Headers */,
+				AF456B7B18A1DF1F0093C218 /* Base64Transcoder.h in Headers */,
+				AF456B7D18A1DF1F0093C218 /* HSK_CFUtilities.h in Headers */,
+				AF456B8318A1DF1F0093C218 /* SKPSMTPMessage.h in Headers */,
+				AF456B7F18A1DF1F0093C218 /* NSData+Base64Additions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,7 +254,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF456B7C18A1DF1F0093C218 /* Base64Transcoder.m in Sources */,
+				AF456B8418A1DF1F0093C218 /* SKPSMTPMessage.m in Sources */,
+				AF456B8018A1DF1F0093C218 /* NSData+Base64Additions.m in Sources */,
 				AF46E172189EAA180074EA71 /* Monsoon.mm in Sources */,
+				AF456B8218A1DF1F0093C218 /* NSStream+SKPSMTPExtensions.m in Sources */,
+				AF456B7E18A1DF1F0093C218 /* HSK_CFUtilities.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

